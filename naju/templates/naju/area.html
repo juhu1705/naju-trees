@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <div class="title area-special">
+            <h2>Fläche</h2>
+            <a href="{{url_for('naju.edit_area', id=area['id'])}}"><i class="far fa-edit"></i></a>
+            <a href="{{url_for('naju.delete_area', id=area['id'])}}" onclick="return confirm('Wollen sie diese Fläche wirklich löschen? Alle Bäume dieser Fläche und die Fläche selbst werden dabei unwiederruflich gelöscht!')"><i class="fas fa-trash"></i></a>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="div">
+                <h5>Name</h5>
+                <input class="input" type="text" name="name" id="name" value="{{area['name']}}" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-address-card"></i>
+            </div>
+            <div class="div">
+                <h5>Abkürzung</h5>
+                <input class="input" type="text" name="short" id="short" value="{{area['short']}}" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-road"></i>
+            </div>
+            <div class="div">
+                <h5>Addresse</h5>
+                <a class="input" type="text" name="address" id="address" href="{{ area['link'] }}">
+                    {{area['address']}}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

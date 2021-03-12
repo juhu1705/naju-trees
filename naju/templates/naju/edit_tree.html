@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <h2 class="title">Baum bearbeiten</h2>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-chart-area"></i>
+            </div>
+            <div class="div">
+                <h5>Fläche</h5>
+                <input class="input" name="area" id="area" value="{{tree['name']}}" readonly="readonly" required>
+            </div>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-tree"></i>
+            </div>
+            <div class="div">
+                <h5>Nummer</h5>
+                <input class="input" type="number" name="number" id="number" value="{{tree['number']}}" required>
+            </div>
+        </div>
+        {% for param in params %}
+            {% if param['type'] == 'Text' or param['type'] == 'Kommazahl' %}
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="far fa-file-alt"></i>
+                </div>
+                <div class="div">
+                    <h5>{{param['name']}}</h5>
+                    <input class="input" name="{{param['name']}}" id="{{param['name']}}" value="{{param['value']}}">
+                </div>
+            </div>
+            {% elif param['type'] == 'Nummer' %}
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="fas fa-sort-numeric-up-alt"></i>
+                </div>
+                <div class="div">
+                    <h5>{{param['name']}}</h5>
+                    <input class="input" type="number" name="{{param['name']}}" id="{{param['name']}}" value="{{param['value']}}">
+                </div>
+            </div>
+            {% elif param['type'] == 'Link' %}
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="div">
+                    <h5>{{param['name']}}</h5>
+                    <input class="input" type="url" name="{{param['name']}}" id="{{param['name']}}" value="{{param['value']}}">
+                </div>
+            </div>
+            {% elif param['type'] == 'Datum' %}
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="far fa-calendar-check"></i>
+                </div>
+                <div class="div">
+                    <h5>{{param['name']}}</h5>
+                    <input class="input" type="date" name="{{param['name']}}" id="{{param['name']}}" value="{{param['value']}}">
+                </div>
+            </div>
+            {% elif param['type'] == 'Wahr / Falsch' %}
+            <div class="agreement_input">
+                <div class="center_checkbox">
+                    <div>
+                        <input class="input" type="checkbox" name="{{param['name']}}" id="agreement">
+                    </div>
+                </div>
+                <label for="{{param['name']}}" class="agreement_label">{{param['name']}}</label>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <div class="confirm-field">
+            <button id="btnconfirm" type="submit">
+                <div><span>Hinzufügen</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <div class="title area-special">
+            <h2>Parameter hinzufügen</h2>
+            <a href="{{url_for('naju.delete_param', id=param['id'])}}" onclick="return confirm('Wollen sie diesen Parameter wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="div">
+                <h5>Name</h5>
+                <input class="input" type="text" name="name" id="name" value="{{param['name']}}" required>
+            </div>
+        </div>
+
+        <div class="input-div selector-line">
+            <div class="i">
+                <i class="far fa-keyboard"></i>
+            </div>
+            <div class="div">
+                <h5>Typ</h5>
+
+                <div class="select-box area">
+                    <div class="option-container area">
+                        <div class="option text">
+                            <input type="radio" class="radio" id="sidebar-2" name="category">
+                            <label for="sidebar-2">Text</label>
+                        </div>
+                        <div class="option komma">
+                            <input type="radio" class="radio" id="sidebar-4" name="category">
+                            <label for="sidebar-4">Kommazahl</label>
+                        </div>
+                        <div class="option nummer">
+                            <input type="radio" class="radio" id="sidebar-1" name="category">
+                            <label for="sidebar-1">Nummer</label>
+                        </div>
+                        <div class="option link">
+                            <input type="radio" class="radio" id="sidebar-3" name="category">
+                            <label for="sidebar-3">Link</label>
+                        </div>
+                        <div class="option datum">
+                            <input type="radio" class="radio" id="sidebar-0" name="category">
+                            <label for="sidebar-0">Datum</label>
+                        </div>
+                        <div class="option bool">
+                            <input type="radio" class="radio" id="sidebar-5" name="category">
+                            <label for="sidebar-5">Wahr / Falsch</label>
+                        </div>
+                    </div>
+
+                    <input class="input selected visible" name="type" id="type" value="{{param['type']}}" readonly="readonly" required>
+
+                    <div class="search-box">
+                        <input type="text" placeholder="Suche..." />
+                    </div>
+                </div>
+
+            </div>
+            <div class="i arrow">
+                <i class="fas fa-angle-down"></i>
+            </div>
+        </div>
+
+        <div class="confirm-field">
+            <button id="btnconfirm" type="submit">
+                <div><span>Speichern</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

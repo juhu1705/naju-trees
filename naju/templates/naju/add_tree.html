@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <h2 class="title">Baum hinzufügen</h2>
+        <div class="input-div selector-line">
+            <div class="i">
+                <i class="fas fa-chart-area"></i>
+            </div>
+            <div class="div">
+                <h5>Fläche</h5>
+
+                <div class="select-box area">
+                    <div class="option-container area">
+                        {% for area in areas %}
+                        <div class="option {{area['name']}}">
+                            <input type="radio" class="radio" id="sidebar-{{area['id']}}" name="category">
+                            <label for="sidebar-{{area['id']}}">{{area['name']}}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if areas|length > 0 %}
+                    <input class="input selected visible" name="area" id="area" value="{{areas[0]['name']}}" readonly="readonly" required>
+                    {% else %}
+                    <input class="input selected visible" name="area" id="area" value="Keine Fläche gefunden" readonly="readonly" required>
+                    {% endif %}
+                    <div class="search-box">
+                        <input type="text" placeholder="Suche..." />
+                    </div>
+                </div>
+
+            </div>
+            <div class="i arrow">
+                <i class="fas fa-angle-down"></i>
+            </div>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-tree"></i>
+            </div>
+            <div class="div">
+                <h5>Nummer</h5>
+                <input class="input" type="number" name="number" id="number" required>
+            </div>
+        </div>
+        <div class="confirm-field">
+            <button id="btnconfirm" type="submit">
+                <div><span>Hinzufügen</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

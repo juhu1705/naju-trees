@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main_page">
+    <h1 id="hilfe-naju-baumbestand" style="margin-bottom: 2rem">Hilfe - NAJU - Baumbestand</h1>
+    <h2 id="einfuhrung">Einführung</h2>
+    <p>Die NAJU Baumbestandsseite dient zur systematischen erfassung aller Obstbäume auf den Flächen der NAJU Essen/Mülheim EV. Sie ermöglicht das einfache hinzufügen, löschen und bearbeiten von Bäumen und gibt zudem die Möglichkeit die Tabelle geordnet in eine Excel Datei des Dateityps &ldquo;xlsx&rdquo; zu speichern.</p>
+    <h2 id="einloggen">Einloggen</h2>
+    <p>Die NAJU Baumbestandsseite ist Momentan noch Bestandteil der Website https://www.dfs-book.de/. Daher wird Momentan noch ein Account dieser Website zum einloggen benötigt. Sollte diese Website unabhängig laufen wird für die Benutzung weiterhin ein Account von nöten sein. Beim ersten Aufrufen der Website werden sie direkt auf die Login Seite weitergeleitet. Hier müssen sie ihre Login Daten eingeben und können dann über den Knopf &ldquo;Einloggen&rdquo; auf die Startseite gelangen.</p>
+    <h2 id="ausloggen">Ausloggen</h2>
+    <p>Das Ausloggen ist über das zweite ausklappbare Icon links oben in der Ecke der Website möglich, solange sie eingeloggt sind.</p>
+    <h2 id="das-hauptfenster">Das Hauptfenster</h2>
+    <p>Fast alle Seiten leiten sie nach ausfüllung der Formulare automatisch auf die Hauptseite zurück. Sollten sie dennoch mal schnell zur Hauptseite zurückwollen, bspw. ohne ein Formular auszufüllen, können sie auf das Haus Icon, ganz links oben in der Ecke der Website klicken.</p>
+    <p>Das Hauptfenster besteht im wesentlichen aus einer Tabelle in der alle Bäume der Datenbank nach &ldquo;Fläche&rdquo; und &ldquo;Nummer&rdquo; sortiert aufgelistet sind. Diese Liste kann über die darüberstehende Filterbedingung gefiltert werden. Im Linken Filterbereich muss dazu lediglich die entsprechende zu Filternde Zeile ausgewählt werden und im Textfeld rechts daneben kann dann der Filterbegriff angegeben werden. Die Liste wird dann automatisch gefiltert.</p>
+    <h2 id="baume">Bäume</h2>
+    <p>Bäume können einfach hinzugefügt, bearbeitet und gelöscht werden.</p>
+    <p>Über den Knopf &ldquo;Neuen Baum&rdquo; können sie einen Neuen Baum erstellen. Dieser benötigt zunächst eine Fläche auf der er steht und eine Nummer. Die Fläche kann aus allen erstellten Flächen ausgewählt werden. Über &ldquo;Hinzufügen&rdquo; fügen sie den Baum nun hinzu.</p>
+    <p>Jetzt können sie ihn aus der Liste der Bäume heraussuchen und weiter bearbeiten. Dazu klicken sie auf das Icon mit dem Papier und Stift in der Tabellenspalte des zu bearbeitenden Baumes. Nun wird ihnen ein Fenster angezeigt in dem sie die Daten des Baumes verändern können und nun auch die weiteren Tabellenspalten auswählen können.</p>
+    <p><em>Hinweis: Die Fläche ist nach erstellen des Baumes nicht mehr veränderbar!</em></p>
+    <p>Zum Löschen eines Baumes klicken sie einfach auf den Mülleimer in der Spalte des Baumes. Bestätigen sie die Anfrage ob sie den Baum wirklich löschen wollen mit &ldquo;OK&rdquo; und der Baum ist erfolgreich gelöscht worden.</p>
+    <p><em>Wichtig: Gelöschte Bäume können nicht wiederhergestellt werden</em></p>
+    <h2 id="flachen">Flächen</h2>
+    <p>Flächen sind fast ebensoleicht hinzuzufügen und zu bearbeiten.</p>
+    <p>Um eine Fläche zu erstellen betätigen sie einfach den Knopf &ldquo;Fläche erstellen&rdquo; auf der Hauptseite der Website. Nun müssen sie genauere Angaben zu Fläche machen:</p>
+    <ol>
+    <li>Name - Der Name der Fläche</li>
+    <li>Abkürzung - Das kürzel der Fläche (Sollte aus nicht mehr als zwei Buchstaben bestehen)</li>
+    <li>Addresse - Die Anfahrtsaddresse der Fläche (Am besten den Treffpunkt)</li>
+    <li>Addresslink - Ein Link auf eine Kartenapp mit dem genauen standord der Addresse (Hier kann auch zurnot ein anderer Link angegeben werden)</li>
+    </ol>
+    <p>Wenn alle Daten eingegeben sind kann über den Knopf &ldquo;Hinzufügen&rdquo; die Fläche hinzugefügt werden. Jetzt kann sie Bäumen zugeordnet werden.</p>
+    <p>Um die hinzugefügte Fläche jetzt zu bearbeiten benötigt es zunächst einen Baum auf der entsprechenden Fläche. Dann kann im Hauptfenster auf den Flächennamen geklickt werden und es erscheint ein Fenster mit den näheren Daten dieser Fläche. Hier kann über klicken auf die Addresse der mitgegebene Link aufgerufen werden. Hier kann außerdem über den Mülleimer die Fläche und all ihre Bäume gelöscht werden und über das Stift Icon kann die Fläche bearbeitet werden.</p>
+    <h2 id="parameter">Parameter</h2>
+    <p>Auch neue Tabellenparameter können hinzugefügt, bearbeitet und gelöscht werden.</p>
+    <p>Hinzugefügt werden sie über das Plus in der Kopfzeile der Tabelle auf der Startseite.</p>
+    <p>Bearbeitet werden können sie über einfaches klicken auf den erschienenden Reiter in der Liste. Dort können sie dann auch über klicken auf das Mülleimer-Symbol gelöscht werden.</p>
+    <h2 id="excel-herunterladen">Excel herunterladen</h2>
+    <p>Über betätigen des Download Icons in der Tabelle des Hauptfensters (ganz rechts) kann die aktuell dort zu sehende Tabelle in ein Excel Dokument des Typs &ldquo;xlsx&rdquo; gespeichert werden. Dabei werden die unterschiedlichen Flächen in unterschiedliche Reiter aufgeteilt.</p>
+</div>
+{% endblock %}

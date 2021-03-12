@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <h2 class="title">Fläche beabeiten</h2>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="div">
+                <h5>Name</h5>
+                <input class="input" type="text" name="name" id="name" value="{{area['name']}}" required>
+            </div>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-address-card"></i>
+            </div>
+            <div class="div">
+                <h5>Abkürzung</h5>
+                <input class="input" type="text" name="short" id="short" value="{{area['short']}}" required>
+            </div>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-road"></i>
+            </div>
+            <div class="div">
+                <h5>Addresse</h5>
+                <input class="input" type="text" name="address" id="address" value="{{area['address']}}" required>
+            </div>
+        </div>
+
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-map-pin"></i>
+            </div>
+            <div class="div">
+                <h5>Addresslink</h5>
+                <input class="input" type="url" name="link" id="link" value="{{area['link']}}" required>
+            </div>
+        </div>
+
+        <div class="confirm-field">
+            <button id="btnconfirm" type="submit">
+                <div><span>Hinzufügen</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

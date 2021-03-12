@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NAJU - Baumbestand</title>
+    <link rel="icon" href="/static/pictures/NaJu.png" type="image">
+    <link rel="shortcut icon" href="/static/pictures/NaJu.png" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='naju-style.css') }}">
+    <script src="https://kit.fontawesome.com/a37df8e790.js" crossorigin="anonymous"></script>
+    <style>
+        {% block special_styling %}{% endblock %}
+    </style>
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body onclick="removeMobileBar()">
+<div class="header">
+    <a href="https://essen.naju-nrw.de/" class="desktop"><img class="logo" src="/static/pictures/NaJu.png"></a>
+    <a href="{{url_for('naju.help')}}" class="help desktop"><i class="far fa-question-circle"></i></a>
+    <a href="{{url_for('naju.home')}}" class="home desktop"><i class="fas fa-home"></i></a>
+    {% if g.user is not none %}
+    <a href="{{url_for('naju.logout')}}" class="logout desktop"><i class="fas fa-sign-out-alt"></i></a>
+    {% endif %}
+    <a href="{{ url_for('naju.imprint') }}" class="imprint desktop">Impressum</a>
+    <a href="{{ url_for('naju.privacy') }}" class="privacy desktop">Datenschutz</a>
+    <a href="{{ url_for('naju.license') }}" class="license desktop">Lizenzen</a>
+
+    <div class="mobile-top mobile">
+        <i class="fas fa-bars" onclick="toggleMobileBar()"></i>
+        <h1>NaJu - Baumbestand</h1>
+        <a href="https://essen.naju-nrw.de/"><img src="/static/pictures/NaJu.png"></a>
+    </div>
+    <div class="mobile-side mobile" onclick="holdOpen()">
+        <div class="mobile-side-content">
+            <a href="{{url_for('naju.add_tree')}}"><i class="fas fa-tree"></i>Neuer Baum</a>
+            <a href="{{url_for('naju.add_area')}}"><i class="fas fa-chart-area"></i>Neue Fläche</a>
+            <a href="{{ url_for('naju.home') }}"><i class="fas fa-upload"></i>Tabelle Importieren</a>
+            <p></p>
+            <a href="{{url_for('naju.home')}}"><i class="fas fa-home"></i>Home</a>
+            {% if g.user is not none %}
+            <a href="{{url_for('naju.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+            {% endif %}
+            <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
+        </div>
+        <div class="mobile-side-footer">
+            <a href="{{ url_for('naju.imprint') }}">Impressum</a>
+            <a href="{{ url_for('naju.privacy') }}">Datenschutz</a>
+            <a href="{{ url_for('naju.license') }}">Lizenzen</a>
+        </div>
+    </div>
+</div>
+
+{% block direct_body %}{% endblock %}
+
+<div id="page-section">
+    <div id="page">
+        <main>
+            <noscript>
+                <p class="warn">
+                    JavaScript ist in Ihrem Browser deaktiviert bzw. nicht unterstützt.
+                    Diese Seite benötigt JavaScript, um richtig zu funktionieren.
+                </p>
+            </noscript>
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+</div>
+
+
+
+<div class="flash-container">
+    {% for message in get_flashed_messages() %}
+    <div class="flash flash-error" tabindex="0">{{ message }}</div>
+    {% endfor %}
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}" charset="utf-8"></script>
+</body>
+
+</html>

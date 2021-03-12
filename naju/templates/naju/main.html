@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form class="main_page desktop" method="post" autocomplete="off">
+    <div class="confirm-field">
+        <ul class="header-links">
+            <li class="topbar"><a href="{{url_for('naju.add_tree')}}"><i class="fas fa-plus"></i><span>Neuen Baum</span></a></li>
+            <li class="topbar"><a href="{{url_for('naju.add_area')}}"><i class="fas fa-plus"></i><span>Neue Fläche</span></a></li>
+        </ul>
+    </div>
+    <div class="filter-line">
+        <h2 style="align-self: center;">Bäume</h2>
+
+        <div class="input-div line4 no-margin">
+            <div class="i">
+                <i class="fas fa-tag"></i>
+            </div>
+
+
+            <div class="div">
+                <h5 class="selection-header">Filter</h5>
+
+
+                <div class="select-box new_tag">
+                    <div class="option-container new_tag">
+                        {% for tag in params %}
+                        <div class="option tags">
+                            <input type="radio" class="radio" id="{{tag['name']}}" name="category">
+                            <label for="{{tag['name']}}">{{tag['name']}}</label>
+                        </div>
+                        {% endfor %}
+
+                        <div class="option tags">
+                            <input type="radio" class="radio" id="Fläche" name="category">
+                            <label for="Fläche">Fläche</label>
+                        </div>
+                        <div class="option tags">
+                            <input type="radio" class="radio" id="Nummer" name="category">
+                            <label for="Nummer">Nummer</label>
+                        </div>
+                    </div>
+
+                    <input class="selected" name="select_tag" id="select_tag" readonly="readonly">
+
+
+                    <div class="search-box">
+                        <input type="text" placeholder="Suche..." />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="i arrow">
+                <i class="fas fa-angle-down"></i>
+            </div>
+
+            <div class="div">
+                <h5>Suche</h5>
+
+                <input class="input second" type="text" name="tag" id="search" onkeyup="add_filter()">
+            </div>
+
+        </div>
+
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Fläche</th>
+                <th>Nummer</th>
+                {% for param in params %}
+                <th><a href="{{ url_for('naju.edit_param', id = param['id']) }}">{{param['name']}}</a></th>
+                {% endfor %}
+                <th class="editable-cell"><a href="{{ url_for('naju.add_param') }}"><i class="fas fa-plus"></i></a></th>
+                <th class="editable-cell"><button type="submit" style="cursor: pointer"><i class="fas fa-download"></i></button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tree in trees %}
+            <tr>
+                <td class="searchable Fläche"><a href="{{ url_for('naju.area', id=tree['area_id']) }}">{{ tree['name'] }}</a></td>
+                <td class="searchable Nummer">{{ tree['number'] }}</td>
+                {% for param in params %}
+                    {% for e in values %}
+                        {% if param['id'] == e['param_id'] and e['tree_id'] == tree['id'] %}
+                            {% if param['type'] == 'Link' %}
+                                <td class="searchable {{ param['name'] }}"><a href="{{e['value']}}">{{e['value']}}</a></td>
+                            {% else %}
+                                <td class="searchable {{ param['name'] }}">{{e['value']}}</td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                <td class="editable-cell"><a href="{{ url_for('naju.edit_tree', id = tree['id']) }}"><i class="far fa-edit"></i></a></td>
+                <td class="editable-cell"><a href="{{ url_for('naju.delete_tree', id = tree['id']) }}" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+<form class="main_page mobile" method="post" autocomplete="off">
+    <div class="input-div selector-line">
+        <div class="i">
+            <i class="fas fa-chart-area"></i>
+        </div>
+        <div class="div">
+            <h5>Fläche</h5>
+
+            <div class="select-box area_select">
+                <div class="option-container area_select">
+                    {% for area in areas %}
+                    <div class="option {{area['name']}}">
+                        <input type="radio" class="radio" id="sidebar-{{area['id']}}" name="category">
+                        <label for="sidebar-{{area['id']}}">{{area['name']}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if areas|length > 0 %}
+                <input class="input selected visible" name="area_select" id="area_select" value="{{areas[0]['name']}}" readonly="readonly" required>
+                {% else %}
+                <input class="input selected visible" name="area_select" id="area_select" value="Keine Fläche gefunden" readonly="readonly" required>
+                {% endif %}
+                <div class="search-box">
+                    <input type="text" placeholder="Suche..." />
+                </div>
+            </div>
+
+        </div>
+        <div class="i arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Fläche</th>
+                <th>Nummer</th>
+                <th class="editable-cell"><button type="submit" style="cursor: pointer"><i class="fas fa-download"></i></button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tree in trees %}
+            <tr>
+                <td class="searchable Fläche"><a href="{{ url_for('naju.tree', id = tree['id']) }}">{{ tree['name'] }}</a></td>
+                <td class="searchable Nummer"><a href="{{ url_for('naju.tree', id = tree['id']) }}">{{ tree['number'] }}</a></td>
+                <td class="editable-cell"><a href="{{ url_for('naju.delete_tree', id = tree['id']) }}" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="post-section" class="login-content">
+    <div>
+        <div class="title area-special">
+            <h2>Baum</h2>
+            <a href="{{url_for('naju.edit_tree', id=tree['id'])}}"><i class="far fa-edit"></i></a>
+            <a href="{{url_for('naju.delete_tree', id=tree['id'])}}" onclick="return confirm('Wollen sie diesen Baum wirklich löschen?')"><i class="fas fa-trash"></i></a>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-chart-area"></i>
+            </div>
+            <div class="div">
+                <h5>Fläche</h5>
+                <a class="input" type="text" name="address" id="address" href="{{ url_for('naju.area', id=tree['area_id']) }}">
+                    {{tree['name']}}
+                </a>
+            </div>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-tree"></i>
+            </div>
+            <div class="div">
+                <h5>Nummer</h5>
+                <div class="input" type="number" name="number" id="number">
+                    {{tree['number']}}
+                </div>
+            </div>
+        </div>
+        {% for param in params %}
+            {% if param['type'] == 'Wahr / Falsch' %}
+                <div class="agreement_input">
+                    <div class="center_checkbox">
+                        <div>
+                            <input class="input" type="checkbox" name="{{param['name']}}" id="agreement" readonly="readonly">
+                        </div>
+                    </div>
+                    <label for="{{param['name']}}" class="agreement_label">{{param['name']}}</label>
+                </div>
+            {% else %}
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="far fa-file-alt"></i>
+                </div>
+                <div class="div">
+                    <h5>{{param['name']}}</h5>
+                    <div class="input" name="{{param['name']}}" id="{{param['name']}}">
+                        {{param['value']}}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
