@@ -537,6 +537,22 @@ def tree(id):
     return render_template('naju/tree.html', tree=tree, params=params)
 
 
+@bp.route('/confirm/<token>', methods=('GET', 'POST'))
+def confirm_mail(token):
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE confirmation_token = ?', (token,)).fetchone()
+    if user is not None:
+
+        db = get_db()
+        db.execute('UPDATE user SET email_confirmed = ?, confirmation_token = ?',
+                   (1, None,))
+        db.commit()
+
+        return redirect(url_for('naju.index'))
+    else:
+        return redirect(url_for('home.index'))
+
+
 @bp.route('/license')
 def license():
     return render_template('home/license.html')

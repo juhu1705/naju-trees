@@ -45,11 +45,12 @@ def init_db_command():
 @click.argument('password', type=click.STRING)
 @with_appcontext
 def create_user(name, email, password):
-    token = random_uri_safe_string(64)
-    get_db().execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token)'
-                     ' VALUES (?, ?, ?, ?, ?, ?)',
-                     (name, email, generate_password_hash(password), 0, 0, token))
-    get_db().commit()
+    db = get_db()
+
+    db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token)'
+               ' VALUES (?, ?, ?, ?, ?, ?)',
+               (name, email, generate_password_hash(password), 0, 1, None))
+    db.commit()
 
 
 @click.command("make-admin")

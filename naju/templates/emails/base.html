@@ -1,0 +1,24 @@
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <h2>{% block header %}{% endblock %}</h2>
+  <p>{% block content %}{% endblock %}</p>
+  <h3>Kontakt:</h3>
+  <p>Fabius Mettner</p>
+  <p>Hügelstraße 38b</p>
+  <p>45473 Mülheim an der Ruhr, Deutschland</p>
+  <p>E-Mail: fabius1705@live.de</p>
+
+  <h3>Über die Website</h3>
+  <p><a href="{{ url_for('home.imprint') }}">Impressum</a></p>
+  <p><a href="{{ url_for('home.privacy') }}">Datenschutz</a></p>
+  <p><a href="{{ url_for('home.license') }}">Lizenzen</a></p>
+  <br>
+  <p>Diese E-Mail wurde automatisiert erstellt.</p>
+</body>
+
+</html>

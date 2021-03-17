@@ -18,13 +18,16 @@ def create_app(test_config=None):
     os.makedirs(app.instance_path, exist_ok=True)
     os.makedirs(os.path.join(app.instance_path, 'assets/pictures/profile'), exist_ok=True)
 
-    thread = Thread(target=server.run)
-    thread.start()
+    # thread = Thread(target=server.run)
+    # thread.start()
 
     from . import database
     database.init_app(app)
 
     from . import naju
     app.register_blueprint(naju.bp)
+
+    from . import auth
+    app.register_blueprint(auth.bp)
 
     return app
