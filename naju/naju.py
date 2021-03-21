@@ -156,6 +156,10 @@ def password_reset(token):
                 flash('Post incorrect!')
                 return redirect(url_for('home.index'))
 
+            if password == '' or str(password).isspace():
+                flash('You must give a password')
+                return render_template('naju/reset_password.html')
+
             user = db.execute('SELECT * FROM user WHERE password_reset_token = ? AND name = ?', (token, name, )).fetchone()
 
             if user is not None and password == check:

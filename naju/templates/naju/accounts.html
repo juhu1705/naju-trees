@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form class="main_page" method="post" autocomplete="off">
+    <div class="filter-line">
+        <h2 style="align-self: center;">Accounts</h2>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mail</th>
+                <th>Berechtigungslevel</th>
+                <th class="editable-cell"><a href="{{ url_for('admin.register') }}"><i class="fas fa-plus"></i></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td class="searchable Fläche">{{ user['name'] }}</td>
+                <td class="searchable Nummer">{{ user['email'] }}</td>
+                <td class="searchable Level">{{ user['level'] }}</td>
+                <td class="editable-cell"><a href="{{ url_for('admin.del_user', id = user['id']) }}" onclick="return confirm('Wollen sie diesen Benutzer wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

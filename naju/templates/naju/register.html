@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div id="post-section">
+    <div class="container">
+        <div class="login-content">
+            <form method="post" autocomplete="off">
+                <h2 class="title">Registrieren</h2>
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div">
+                        <h5>Benutzername</h5>
+                        <input class="input" type="text" name="username" id="username" maxlength="25" required>
+                    </div>
+                </div>
+                <div class="input-div mail">
+                    <div class="i">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="div">
+                        <h5>E-Mail</h5>
+                        <input class="input" type="email" name="mail" id="mail" required>
+                    </div>
+                </div>
+                <div class="agreement_input">
+                    <div class="center_checkbox">
+                        <div>
+                            <input class="input" type="checkbox" name="agreement" id="agreement" required>
+                        </div>
+                    </div>
+                    <label for="agreement" class="agreement_label">Ich habe die <a href="{{ url_for('naju.privacy') }}">Datenschutzerklärung</a> gelesen und Stimme ihr zu.</label>
+                </div>
+
+
+                <label for="btnconfirm">Mit der Registrierung stimmen sie zu, dass Ihre persönlichen Angaben (Benutzername und E-Mail Addresse) auf dieser Website gespeichert und verarbeitet werden. Sie können Ihren Account jederzeit von einem Administrator löschen lassen.</label>
+                <button id="btnconfirm" type="submit">
+                    <div><span>Registrieren</span></div><i class="fas fa-chevron-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

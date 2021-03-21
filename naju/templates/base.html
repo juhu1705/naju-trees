@@ -23,6 +23,9 @@
     {% if g.user is not none %}
     <a href="{{url_for('naju.logout')}}" class="logout desktop"><i class="fas fa-sign-out-alt"></i></a>
     {% endif %}
+    {% if g.user['level'] > 0 %}
+    <a href="{{url_for('admin.accounts')}}" class="accounts desktop"><i class="fas fa-users"></i></a>
+    {% endif %}
     <a href="{{ url_for('naju.imprint') }}" class="imprint_btn desktop">Impressum</a>
     <a href="{{ url_for('naju.privacy') }}" class="privacy_btn desktop">Datenschutz</a>
     <a href="{{ url_for('naju.license') }}" class="license_btn desktop">Lizenzen</a>
@@ -43,6 +46,9 @@
             <a href="{{url_for('naju.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
             {% endif %}
             <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
+            {% if g.user['level'] > 0 %}
+            <a href="{{url_for('admin.accounts')}}"><i class="fas fa-users"></i>Accounts</a>
+            {% endif %}
         </div>
         <div class="mobile-side-footer">
             <a href="{{ url_for('naju.imprint') }}">Impressum</a>

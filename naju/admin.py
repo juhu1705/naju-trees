@@ -7,7 +7,7 @@ from naju import util
 from naju.database import get_db
 from naju.util import random_uri_safe_string
 
-bp = Blueprint('auth', __name__)
+bp = Blueprint('admin', __name__)
 
 
 def get_admin_key():
@@ -19,14 +19,14 @@ def admin_required(view):
     def wrapped_view(**kwargs):
         if not g.user or g.user['level'] < get_admin_key():
             flash('Du benötigst Administratorberechtigungen!')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('naju.index'))
         return view(**kwargs)
 
     return wrapped_view
 
 
-@admin_required
 @bp.route('/register', methods=('GET', 'POST'))
+@admin_required
 def register():
     if request.method == 'POST':
         try:
@@ -52,9 +52,9 @@ def register():
 
         if error is None:
             token = random_uri_safe_string(64)
-            db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token, visible)'
-                       ' VALUES (?, ?, ?, ?, ?, ?, ?)',
-                       (username, mail, '', 0, 0, token, 0))
+            db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token)'
+                       ' VALUES (?, ?, ?, ?, ?, ?)',
+                       (username, mail, '', 0, 0, token))
             db.commit()
             user = db.execute('SELECT * FROM user WHERE name = ? AND email = ?', (username, mail,)).fetchone()
             from naju.emails import send_confirmation_email
@@ -64,31 +64,67 @@ def register():
             return redirect(url_for('naju.home'))
         flash(error)
 
-    return render_template('admin/register.html')
+    return render_template('naju/register.html')
 
 
 @bp.route('/reset_password/<token>', methods=('GET', 'POST'))
 def reset_password(token):
+    if token is None or token == "" or token == 'None':
+        return redirect('naju.index')
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        check = request.form['check']
+        try:
+            username = request.form['username']
+            password = request.form['password']
+            check = request.form['passwordcheck']
+            agreement = request.form['agreement']
+        except:
+            flash('Post incorrect!')
+            flash('Unter umständen wurde der Datenschutzvereinbarung nicht zugestimmt! Diese Zustimmung ist '
+                  'erforderlich!')
+            return render_template('naju/activate_user.html')
+
+        if not agreement:
+            flash('Es wurde der Datenschutzvereinbarung nicht zugestimmt!')
+            return render_template('naju/activate_user.html')
 
         if password == '' or str(password).isspace():
             flash('Es muss ein Password angegeben sein!')
-            return render_template('naju/reset_password.html')
+            return render_template('naju/activate_user.html')
 
         if check != password:
             flash('Die Passwörter müssen übereinstimmen!')
-            return render_template('naju/reset_password.html')
+            return render_template('naju/activate_user.html')
 
         db = get_db()
 
-        user = db.execute('SELECT * FROM user WHERE confirmation_token=? AND name=?', (token, username)).fetchone()
+        user = db.execute('SELECT * FROM user WHERE confirmation_token=? AND name=?',
+                          (token, username, )).fetchone()
 
         if user is not None:
-            db.execute('UPDATE user SET pwd_hash=? WHERE id=?', (generate_password_hash(password), user['id']))
+            db.execute('UPDATE user SET pwd_hash=?, confirmation_token=?, email_confirmed=? WHERE id=?',
+                       (generate_password_hash(password), None, 1, user['id'], ))
             db.commit()
 
-        return redirect('naju.index')
-    return render_template('naju/reset_password.html')
+            return redirect(url_for('naju.index'))
+
+        flash('Maybe your username was typed wrong. Please try again!')
+    return render_template('naju/activate_user.html')
+
+
+
+@bp.route('/accounts')
+@admin_required
+def accounts():
+    users = get_db().execute('SELECT * FROM user ORDER BY name ASC').fetchall()
+    return render_template('naju/accounts.html', users=users)
+
+
+@bp.route('/account/delete/<int:id>')
+@admin_required
+def del_user(id):
+    db = get_db()
+
+    db.execute('DELETE FROM user WHERE id = ?', (id, ))
+    db.commit()
+
+    return redirect(url_for('naju.home'))
