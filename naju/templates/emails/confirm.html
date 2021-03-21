@@ -8,7 +8,7 @@ Sehr geehrte/r {{ user['name'] }},
 <br>
 <br>
 <br>
-Sie haben sich soeben unter dieser E-Mail auf der DfS-Website registriert. Um Ihren Account nutzen zu können bestätigen Sie bitte folgenden Link: <a href="{{ url_for('auth.confirm_mail', token=token, _external=True) }}">Registrierung abschließen</a>.
+Sie haben sich soeben unter dieser E-Mail auf der DfS-Website registriert. Um Ihren Account nutzen zu können bestätigen Sie bitte folgenden Link: <a href="{{ url_for('admin.set_user', token=token, _external=True) }}">Registrierung abschließen</a>.
 <br>
 <br>
 <br>

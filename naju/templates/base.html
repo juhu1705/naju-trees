@@ -23,9 +23,9 @@
     {% if g.user is not none %}
     <a href="{{url_for('naju.logout')}}" class="logout desktop"><i class="fas fa-sign-out-alt"></i></a>
     {% endif %}
-    <a href="{{ url_for('naju.imprint') }}" class="imprint desktop">Impressum</a>
-    <a href="{{ url_for('naju.privacy') }}" class="privacy desktop">Datenschutz</a>
-    <a href="{{ url_for('naju.license') }}" class="license desktop">Lizenzen</a>
+    <a href="{{ url_for('naju.imprint') }}" class="imprint_btn desktop">Impressum</a>
+    <a href="{{ url_for('naju.privacy') }}" class="privacy_btn desktop">Datenschutz</a>
+    <a href="{{ url_for('naju.license') }}" class="license_btn desktop">Lizenzen</a>
 
     <div class="mobile-top mobile">
         <i class="fas fa-bars" onclick="toggleMobileBar()"></i>

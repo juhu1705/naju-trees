@@ -7,10 +7,10 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, send_from_directory,
     send_file, session
 )
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from naju import server
 from naju.database import get_db
+from naju.util import random_uri_safe_string
 
 bp = Blueprint('naju', __name__)
 
@@ -91,10 +91,12 @@ def index():
 
         user = db.execute('SELECT * FROM user WHERE name = ? OR email = ?', (username, username,)).fetchone()
 
-        if user is None:
+        if password == '':
+            error = 'Das Passwort ist falsch!'
+        elif user is None:
             error = 'Der Benutzername existiert nicht.'
         elif not check_password_hash(user['pwd_hash'], password):
-            error = 'Das Passwort war falsch.'
+            error = 'Das Passwort ist falsch.'
         elif user['email_confirmed'] == 0:
             error = 'Ihre E-Mail ist noch nicht verifiziert.'
 
@@ -106,6 +108,65 @@ def index():
         flash(error)
 
     return render_template('naju/login.html')
+
+
+@bp.route('/account/reset', methods=('GET', 'POST'))
+def reset_password_request():
+    if request.method == 'POST':
+        try:
+            username = request.form['username']
+            mail = request.form['mail']
+        except:
+            flash('Post incorrect!')
+            print('Post incorrect!')
+            return render_template('naju/login.html')
+
+        db = get_db()
+
+        user = db.execute('SELECT * FROM user WHERE name = ? AND email = ?', (username, mail,)).fetchone()
+
+        print(str(user))
+        users = db.execute('SELECT * FROM user').fetchone()
+        print(users['email'])
+
+        if user is not None:
+            token = random_uri_safe_string(64)
+
+            db.execute('UPDATE user SET password_reset_token = ? WHERE id = ?', (token, user['id'],))
+            db.commit()
+
+            from naju.emails import send_password_reset_email
+
+            send_password_reset_email(user['email'], user, token)
+            return redirect(url_for('naju.index'))
+    return render_template('naju/reset_request.html')
+
+
+@bp.route('/reset/<token>', methods=('GET', 'POST'))
+def password_reset(token):
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE password_reset_token = ?', (token,)).fetchone()
+    if user is not None:
+        if request.method == 'POST':
+            try:
+                name = request.form['username']
+                password = request.form['password']
+                check = request.form['passwordcheck']
+            except:
+                flash('Post incorrect!')
+                return redirect(url_for('home.index'))
+
+            user = db.execute('SELECT * FROM user WHERE password_reset_token = ? AND name = ?', (token, name, )).fetchone()
+
+            if user is not None and password == check:
+                db = get_db()
+                db.execute('UPDATE user SET pwd_hash = ?, password_reset_token = ? WHERE id = ?',
+                           (generate_password_hash(password), None, user['id'], ))
+                db.commit()
+                return redirect(url_for('naju.index'))
+        return render_template('naju/reset_password.html')
+    else:
+        return redirect(url_for('naju.index'))
 
 
 @bp.route('/logout')

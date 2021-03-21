@@ -53,9 +53,10 @@ body {
     transition: all .5s ease;
     border-radius: 0 0 5px 5px;
     filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.6));
+    border-bottom: initial;
 }
 
-.help, .logout, .home, .imprint, .privacy, .license {
+.help, .logout, .home, .imprint_btn, .privacy_btn, .license_btn {
     z-index: 10;
     position: fixed;
     overflow: auto;
@@ -66,9 +67,10 @@ body {
     transition: all .5s ease;
     border-radius: 0 0 5px 5px;
     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
+    border-bottom: initial;
 }
 
-.imprint, .privacy, .license {
+.imprint_btn, .privacy_btn, .license_btn {
     top: initial;
     right: initial;
     background: white;
@@ -80,31 +82,34 @@ body {
     font-size: 1rem;
 }
 
-.imprint {
+.imprint_btn {
     bottom: 5.5rem;
 }
 
-.privacy {
+.privacy_btn {
     bottom: 3rem;
 }
 
-.license {
+.license_btn {
     bottom: 0.5rem;
 }
 
-.imprint:hover, .privacy:hover, .license:hover {
+.imprint_btn:hover, .privacy_btn:hover, .license_btn:hover {
     left: 0;
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.4);
+    border-bottom: initial;
 }
 
 .help:hover, .logout:hover, .home:hover {
     top: 0;
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.4);
+    border-bottom: initial;
 }
 
 .logo:hover {
     top: 0;
     filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.5));
+    border-bottom: initial;
 }
 
 .help {
@@ -221,10 +226,12 @@ p {
     color: #8b91a7;
     font-size: 0.9rem;
     transition: .3s;
+    border-bottom: initial;
 }
 
 .forgot-p:hover {
     color: green;
+    border-bottom: initial;
 }
 
 .filter {
@@ -715,6 +722,54 @@ table tbody tr:nth-child(2n) {
 .invisible {
     display: none;
     opacity: 0;
+}
+
+/*  =======================
+    PRIVACY IMPRINT LICENCE
+    ======================= */
+
+#post-section {
+    padding: 2rem;
+    padding-top: 6rem;
+}
+
+.topic {
+    font-size: 2rem;
+}
+
+.license {
+    padding-top: 1rem;
+}
+
+.license-topic {
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.contact {
+    padding: 2rem;
+    padding-left: 4rem;
+}
+
+.license p {
+    padding-top: 0.5rem;
+}
+
+a {
+    color: black;
+    border-bottom: 1px dotted black;
+}
+
+a:hover {
+    border-bottom: 1px solid black;
+}
+
+table a, li a, .area-special a {
+    border-bottom: initial;
+}
+
+table a:hover, li a:hover, .area-special a:hover {
+    border-bottom: initial;
 }
 
 @keyframes fade-out {
