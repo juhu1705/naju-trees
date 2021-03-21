@@ -8,12 +8,12 @@ Sehr geehrte/r {{ user['name'] }},
 <br>
 <br>
 <br>
-Sie haben sich soeben unter dieser E-Mail auf der DfS-Website registriert. Um Ihren Account nutzen zu können bestätigen Sie bitte folgenden Link: <a href="{{ url_for('auth.confirm_mail', token=token, _external=True) }}">Registrierung abschließen</a>.
+Sie wurden soeben unter dieser E-Mail mit dem Benutzernamen {{ user['name'] }} auf der NAJU-Baumbestandswebsite registriert. Um Ihren Account nutzen zu können bestätigen Sie bitte folgenden Link: <a href="{{ url_for('admin.reset_password', token=token, _external=True) }}">Registrierung abschließen</a>.
 <br>
 <br>
 <br>
 Mit freundlichen Grüßen,
 <br>
 <br>
-Ihr DfS-Team.
+NaJu-Baumbestandswebsite.
 {% endblock %}

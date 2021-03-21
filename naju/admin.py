@@ -32,8 +32,6 @@ def register():
         try:
             username = request.form['username']
             mail = request.form['mail']
-            password = request.form['password']
-            passwordcheck = request.form['passwordcheck']
             agreement = request.form['agreement']
         except:
             flash('Post incorrect!')
@@ -47,8 +45,6 @@ def register():
             error = 'Es wurde der Datenschutzvereinbarung nicht zugestimmt!'
         elif user is not None:
             error = 'Der Benutzername oder die E-Mailaddresse sind bereits in Benutzung.'
-        elif password != passwordcheck:
-            error = 'Ihre Passwörter stimmen nicht überein.'
         elif not username:
             error = 'Sie haben keinen Benutzernamen angegeben.'
         elif not mail or not util.check_email(mail):
@@ -58,7 +54,7 @@ def register():
             token = random_uri_safe_string(64)
             db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token, visible)'
                        ' VALUES (?, ?, ?, ?, ?, ?, ?)',
-                       (username, mail, generate_password_hash(password), 0, 0, token, 0))
+                       (username, mail, '', 0, 0, token, 0))
             db.commit()
             user = db.execute('SELECT * FROM user WHERE name = ? AND email = ?', (username, mail,)).fetchone()
             from naju.emails import send_confirmation_email
@@ -69,3 +65,30 @@ def register():
         flash(error)
 
     return render_template('admin/register.html')
+
+
+@bp.route('/reset_password/<token>', methods=('GET', 'POST'))
+def reset_password(token):
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        check = request.form['check']
+
+        if password == '' or str(password).isspace():
+            flash('Es muss ein Password angegeben sein!')
+            return render_template('naju/reset_password.html')
+
+        if check != password:
+            flash('Die Passwörter müssen übereinstimmen!')
+            return render_template('naju/reset_password.html')
+
+        db = get_db()
+
+        user = db.execute('SELECT * FROM user WHERE confirmation_token=? AND name=?', (token, username)).fetchone()
+
+        if user is not None:
+            db.execute('UPDATE user SET pwd_hash=? WHERE id=?', (generate_password_hash(password), user['id']))
+            db.commit()
+
+        return redirect('naju.index')
+    return render_template('naju/reset_password.html')
