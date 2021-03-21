@@ -2,7 +2,6 @@ import os
 from threading import Thread
 
 from flask import Flask
-from naju import server
 
 
 def create_app(test_config=None):
@@ -27,7 +26,7 @@ def create_app(test_config=None):
     from . import naju
     app.register_blueprint(naju.bp)
 
-    from . import auth
-    app.register_blueprint(auth.bp)
+    from . import admin
+    app.register_blueprint(admin.bp)
 
     return app
