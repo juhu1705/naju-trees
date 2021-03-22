@@ -8,7 +8,8 @@ setup(
     zip_safe=False,
     install_requires=[
         'flask',
-        'XlsxWriter'
+        'XlsxWriter',
+        'openpyxl'
     ],
     author='Juhu1705',
 )
