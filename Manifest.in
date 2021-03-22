@@ -1,0 +1,4 @@
+include naju/schema.sql
+graft naju/static
+graft naju/templates
+global-exclude *.pyc

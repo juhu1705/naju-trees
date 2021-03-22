@@ -42,15 +42,23 @@ def init_db_command():
 @click.command('create-user')
 @click.argument('name', type=click.STRING)
 @click.argument('email', type=click.STRING)
-@click.argument('password', type=click.STRING)
 @with_appcontext
-def create_user(name, email, password):
+def create_user(name, email):
     db = get_db()
+
+    password = click.prompt("Neues Passwort eingeben (unsichtbar)", hide_input=True)
 
     db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token)'
                ' VALUES (?, ?, ?, ?, ?, ?)',
                (name, email, generate_password_hash(password), 0, 1, None))
     db.commit()
+
+
+@click.command('load-xlsx-file')
+@with_appcontext
+def load_xlsx_file():
+    from naju import excel
+    excel.load_table()
 
 
 @click.command("make-admin")
@@ -72,3 +80,4 @@ def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(add_teacher)
     app.cli.add_command(create_user)
+    app.cli.add_command(load_xlsx_file)

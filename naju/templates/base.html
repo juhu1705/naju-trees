@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NAJU - Baumbestand</title>
-    <link rel="icon" href="/static/pictures/NaJu.png" type="image">
-    <link rel="shortcut icon" href="/static/pictures/NaJu.png" type="image">
+    <link rel="icon" href="{{ url_for('static', filename='pictures/NaJu.png') }}" type="image">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='pictures/NaJu.png') }}" type="image">
     <link rel="stylesheet" href="{{ url_for('static', filename='naju-style.css') }}">
     <script src="https://kit.fontawesome.com/a37df8e790.js" crossorigin="anonymous"></script>
     <style>
@@ -17,14 +17,14 @@
 
 <body onclick="removeMobileBar()">
 <div class="header">
-    <a href="https://essen.naju-nrw.de/" class="desktop"><img class="logo" src="/static/pictures/NaJu.png"></a>
+    <a href="https://essen.naju-nrw.de/" class="desktop"><img class="logo" src="{{ url_for('static', filename='pictures/NaJu.png') }}"></a>
     <a href="{{url_for('naju.help')}}" class="help desktop"><i class="far fa-question-circle"></i></a>
     <a href="{{url_for('naju.home')}}" class="home desktop"><i class="fas fa-home"></i></a>
     {% if g.user is not none %}
     <a href="{{url_for('naju.logout')}}" class="logout desktop"><i class="fas fa-sign-out-alt"></i></a>
-    {% endif %}
     {% if g.user['level'] > 0 %}
     <a href="{{url_for('admin.accounts')}}" class="accounts desktop"><i class="fas fa-users"></i></a>
+    {% endif %}
     {% endif %}
     <a href="{{ url_for('naju.imprint') }}" class="imprint_btn desktop">Impressum</a>
     <a href="{{ url_for('naju.privacy') }}" class="privacy_btn desktop">Datenschutz</a>
@@ -33,7 +33,7 @@
     <div class="mobile-top mobile">
         <i class="fas fa-bars" onclick="toggleMobileBar()"></i>
         <h1>NaJu - Baumbestand</h1>
-        <a href="https://essen.naju-nrw.de/"><img src="/static/pictures/NaJu.png"></a>
+        <a href="https://essen.naju-nrw.de/"><img src="{{ url_for('static', filename='pictures/NaJu.png') }}"></a>
     </div>
     <div class="mobile-side mobile" onclick="holdOpen()">
         <div class="mobile-side-content">
@@ -46,7 +46,7 @@
             <a href="{{url_for('naju.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
             {% endif %}
             <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
-            {% if g.user['level'] > 0 %}
+            {% if g.user is not none and g.user['level'] > 0 %}
             <a href="{{url_for('admin.accounts')}}"><i class="fas fa-users"></i>Accounts</a>
             {% endif %}
         </div>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NAJU - Baumbestand - Herunterladen der Daten</title>
+    <link rel="icon" href="/static/pictures/NaJu.png" type="image">
+    <link rel="shortcut icon" href="/static/pictures/NaJu.png" type="image">
+</head>
+<body>
+<trees>
+    {% for tree in trees %}
+    <tree>
+        <id>{{ tree['id'] }}</id>
+        <area_id>{{ tree['area_id'] }}</area_id>
+        <number>{{ tree['number'] }}</number>
+    </tree>
+    {% endfor %}
+</trees>
+<areas>
+    {% for area in areas %}
+    <one_area>
+        <id>{{ area['id'] }}</id>
+        <address>{{ area['address'] }}</address>
+        <name>{{ area['name'] }}</name>
+        <address_link>{{ area['link'] }}</address_link>
+        <short>{{ area['short'] }}</short>
+    </one_area>
+    {% endfor %}
+</areas>
+<tree_params>
+    {% for tree_param in tree_params %}
+    <tree_param>
+        <tree_id>{{ tree_param['tree_id'] }}</tree_id>
+        <param_id>{{ tree_param['param_id'] }}</param_id>
+        <value>{{ tree_param['value'] }}</value>
+    </tree_param>
+    {% endfor %}
+</tree_params>
+<param_types>
+    {% for tree_param_type in tree_param_types %}
+    <param_type>
+        <id>{{ tree_param_type['id'] }}</id>
+        <name>{{ tree_param_type['name'] }}</name>
+        <type>{{ tree_param_type['type'] }}</type>
+        <order_id>{{ tree_param_type['order_id'] }}</order_id>
+    </param_type>
+    {% endfor %}
+</param_types>
+</body>
+</html>

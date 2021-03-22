@@ -47,7 +47,7 @@ def _send_mail(address: str, subject: str, content: str, content_type="html", co
     sender_address = 'fabius1705@live.de'
 
     msg = MIMEText(content, content_type, content_charset)
-    msg["From"] = f"DfS <{sender_address}>"
+    msg["From"] = f"NaJu - Baumbestand <{sender_address}>"
     msg["Subject"] = subject
 
     smtp_param = smtp is not None
@@ -72,9 +72,9 @@ def _send_mail(address: str, subject: str, content: str, content_type="html", co
 
 def send_password_reset_email(address, user, token):
     content = render_template('emails/reset.html', user=user, token=token)
-    _send_mail(address, 'DfS: Passwort zurücksetzen', content)
+    _send_mail(address, 'NaJu - Baumbestand: Passwort zurücksetzen', content)
 
 
 def send_confirmation_email(address, user, token):
     content = render_template('emails/confirm.html', user=user, token=token)
-    _send_mail(address, 'DfS: Anmeldung Abschließen', content)
+    _send_mail(address, 'NaJu - Baumbestand: Anmeldung abschließen', content)

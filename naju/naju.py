@@ -1,6 +1,7 @@
 import functools
 import os
 import re
+from multiprocessing.connection import wait
 from threading import Thread
 
 from flask import (
@@ -8,11 +9,20 @@ from flask import (
     send_file, session
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 from naju.database import get_db
 from naju.util import random_uri_safe_string
 
 bp = Blueprint('naju', __name__)
+
+
+ALLOWED_EXTENSIONS = {'txt', 'xml', 'html'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def find(string):
@@ -631,3 +641,38 @@ def imprint():
 @bp.route('/privacy')
 def privacy():
     return render_template('home/privacy.html')
+
+
+@bp.route('/export')
+@login_required
+def export():
+    db = get_db()
+
+    trees = db.execute('SELECT * FROM tree').fetchall()
+    areas = db.execute('SELECT * FROM area').fetchall()
+    tree_params = db.execute('SELECT * FROM tree_param').fetchall()
+    tree_param_types = db.execute('SELECT * FROM tree_param_type').fetchall()
+
+    return render_template('export.html', trees=trees, areas=areas,
+                           tree_params=tree_params, tree_param_types=tree_param_types)
+
+
+@bp.route('/update', methods=('GET', 'POST'))
+def update_data():
+    if request.method == 'POST':
+        try:
+            data = request.files['data']
+        except:
+            flash('Daten sind nicht richtig angegenben!')
+            return redirect(url_for('naju.index'))
+
+        if data and allowed_file(data.filename):
+            from . import read_xml
+            filename = secure_filename(data.filename)
+            filename = filename.rsplit('.')[0]
+            import time
+            path = os.path.join(current_app.instance_path, 'assets', 'uploads', str(time.time()) + filename + '.xml')
+            os.makedirs(path, exist_ok=True)
+            data.save(path)
+            read_xml.read(path)
+    return redirect(url_for('naju.index'))

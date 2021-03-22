@@ -8,6 +8,7 @@ from typing import Optional
 from flask import current_app
 from naju.database import get_db
 from xlsxwriter.worksheet import (Worksheet, cell_number_tuple, cell_string_tuple)
+from openpyxl import load_workbook
 
 
 def get_column_width(worksheet: Worksheet, column: int) -> Optional[int]:
@@ -50,9 +51,56 @@ def set_column_autowidth(worksheet: Worksheet, column: int):
     worksheet.set_column(first_col=column, last_col=column, width=maxwidth + 10)
 
 
+def load_table():
+    print('Hi')
+    path = os.path.join(current_app.instance_path, 'assets', 'uploads', 'workbook.xlsx')
+    print(path)
+    wb = load_workbook(path)
+
+    db = get_db()
+
+    art = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Art", )).fetchone()
+    sorte = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Sorte",)).fetchone()
+    pflanz = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Pflanzung",)).fetchone()
+    u = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Umfang in cm",)).fetchone()
+    h = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Höhe in cm",)).fetchone()
+    vit = db.execute('SELECT * FROM tree_param_type WHERE name = ?', ("Vital",)).fetchone()
+
+    params = [art, sorte, pflanz, u, h, vit]
+
+    for sheet in wb.worksheets:
+        area = db.execute('SELECT * FROM area WHERE name = ?', (sheet.title, )).fetchone()
+        if area is not None:
+            for row in sheet.rows:
+                digit = str(row[0].value).replace('.', '')
+                if str(digit).isnumeric():
+                    if db.execute('SELECT * FROM tree t, area a '
+                                  'WHERE t.area_id = a.id AND t.area_id = ? AND t.number = ?',
+                                  (area['id'], int(digit), )).fetchone() is None:
+
+                        db.execute("INSERT INTO tree (number, area_id) VALUES (?, ?)",
+                                   (int(digit), area['id'], ))
+                        print(row[0].value)
+                    tree = db.execute('SELECT * FROM tree WHERE number = ? AND area_id = ?', (int(digit), area['id'], ))
+
+                    row_num = 1
+
+                    for param in params:
+                        if row[row_num].value is not None and param is not None:
+                            if db.execute('SELECT * FROM tree_param '
+                                          'WHERE tree_id = ? AND param_id = ?',
+                                          (tree['id'], param['id'])).fetchone() is None:
+                                db.execute('INSERT INTO tree_param (tree_id, param_id, value) VALUES (?, ?, ?)',
+                                           (tree['id'], param['id'], row[row_num].value))
+                        row_num += 1
+
+    wb.close()
+    db.commit()
+
+
 def create_table(type, filter):
     path = os.path.join(current_app.instance_path, 'tables')
-    file = os.path.join(path + "type-filter.xlsx")
+    file = os.path.join(path, "type-filter.xlsx")
 
     os.makedirs(path, exist_ok=True)
 
