@@ -245,7 +245,7 @@ def home():
                 data += '<td class="searchable ' + str(escape(par['name'])) + '">' + str(escape(value['value'])) + '</td>'
 
         data += '<td class="editable-cell"><a href="' + url_for('naju.edit_tree', id=tree['id']) + '"><i class="far fa-edit"></i></a></td>'
-        data += '<td class="editable-cell"><a href="' + url_for('naju.delete_tree', id=tree['id']) + """" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!)"><i class="fas fa-trash"></i></a></td>"""
+        data += '<td class="editable-cell"><a href="' + url_for('naju.delete_tree', id=tree['id']) + """" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a></td>"""
         data += '</tr>'
         datas.append(data)
 
@@ -284,12 +284,14 @@ def add_tree():
         if number is None:
             error = "Es wird eine Nummer benötigt"
 
-        if type(int(number)) != int:
+        if not str(number).isnumeric() or len(number) > 10:
             error = "Es wird eine Zahl benötigt"
 
         db = get_db()
-        check = db.execute("SELECT * FROM tree t, area a WHERE a.id = t.area_id AND t.number = ? AND a.name = ?",
-                           (int(number), area)).fetchone()
+        check = None
+        if error is None:
+            check = db.execute("SELECT * FROM tree t, area a WHERE a.id = t.area_id AND t.number = ? AND a.name = ?",
+                               (int(number), area)).fetchone()
         if check is not None:
             error = "Dieser Baum existiert bereits!"
 
@@ -426,6 +428,10 @@ def edit_tree(id):
             return render_template('naju/edit_tree.html', tree=tree, params=params)
 
         if number != tree['number']:
+            if str(number).isnumeric() or len(number) > 10:
+                flash("Bitte gebe eine valide Zahl an!")
+                return render_template('naju/edit_tree.html', tree=tree, params=params)
+
             check = db.execute("SELECT * FROM tree t, area a WHERE a.id = t.area_id AND t.number = ? AND a.id = ?",
                                (int(number), tree['area_id'])).fetchone()
 
