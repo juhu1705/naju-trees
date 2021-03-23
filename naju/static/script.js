@@ -104,6 +104,10 @@ selected.forEach(select => {
         optionsList = select.parentNode.querySelectorAll(".option");
         optionsList.forEach( o => {
             o.addEventListener("click", () => {
+                /*if(o.id !== "") {
+                    location.href = '/home/' + o.id;
+                }*/
+
                 select.value = o.querySelector("label").innerHTML;
                 optionContainer = select.parentNode.querySelector(".option-container");
                 optionContainer.classList.remove("active");

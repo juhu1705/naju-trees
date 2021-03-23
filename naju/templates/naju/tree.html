@@ -33,11 +33,11 @@
         {% for param in params %}
             {% if param['type'] == 'Wahr / Falsch' %}
                 <div class="agreement_input">
-                    <div class="center_checkbox">
+                    <a class="center_checkbox" href="{{ url_for('naju.edit_param', id = param['id']) }}">
                         <div>
                             <input class="input" type="checkbox" name="{{param['name']}}" id="agreement" readonly="readonly">
                         </div>
-                    </div>
+                    </a>
                     <label for="{{param['name']}}" class="agreement_label">{{param['name']}}</label>
                 </div>
             {% else %}
@@ -47,9 +47,9 @@
                 </div>
                 <div class="div">
                     <h5>{{param['name']}}</h5>
-                    <div class="input" name="{{param['name']}}" id="{{param['name']}}">
+                    <a class="input" name="{{param['name']}}" id="{{param['name']}}" href="{{ url_for('naju.edit_param', id = param['id']) }}">
                         {{param['value']}}
-                    </div>
+                    </a>
                 </div>
             </div>
             {% endif %}

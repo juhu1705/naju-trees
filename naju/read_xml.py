@@ -21,7 +21,7 @@ def read(file):
             valid_user = True
 
     if not valid_user:
-        return
+        return False
 
     handle_area(document, db)
     handle_trees(document, db)
@@ -33,6 +33,8 @@ def read(file):
     import os
     if os.path.exists(file):
         os.remove(file)
+
+    return True
 
 
 def handle_area(document, db=get_db()):

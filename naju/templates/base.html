@@ -17,38 +17,29 @@
 
 <body onclick="removeMobileBar()">
 <div class="header">
-    <a href="https://essen.naju-nrw.de/" class="desktop"><img class="logo" src="{{ url_for('static', filename='pictures/NaJu.png') }}"></a>
-    <a href="{{url_for('naju.help')}}" class="help desktop"><i class="far fa-question-circle"></i></a>
-    <a href="{{url_for('naju.home')}}" class="home desktop"><i class="fas fa-home"></i></a>
-    {% if g.user is not none %}
-    <a href="{{url_for('naju.logout')}}" class="logout desktop"><i class="fas fa-sign-out-alt"></i></a>
-    {% if g.user['level'] > 0 %}
-    <a href="{{url_for('admin.accounts')}}" class="accounts desktop"><i class="fas fa-users"></i></a>
-    {% endif %}
-    {% endif %}
-    <a href="{{ url_for('naju.imprint') }}" class="imprint_btn desktop">Impressum</a>
-    <a href="{{ url_for('naju.privacy') }}" class="privacy_btn desktop">Datenschutz</a>
-    <a href="{{ url_for('naju.license') }}" class="license_btn desktop">Lizenzen</a>
+    <a href="https://essen.naju-nrw.de/"><img class="logo" src="{{ url_for('static', filename='pictures/NaJu.png') }}"></a>
 
-    <div class="mobile-top mobile">
+    <div class="mobile-top">
         <i class="fas fa-bars" onclick="toggleMobileBar()"></i>
         <h1>NaJu - Baumbestand</h1>
-        <a href="https://essen.naju-nrw.de/"><img src="{{ url_for('static', filename='pictures/NaJu.png') }}"></a>
     </div>
-    <div class="mobile-side mobile" onclick="holdOpen()">
+    <div class="mobile-side" onclick="holdOpen()">
         <div class="mobile-side-content">
-            <a href="{{url_for('naju.add_tree')}}"><i class="fas fa-tree"></i>Neuer Baum</a>
-            <a href="{{url_for('naju.add_area')}}"><i class="fas fa-chart-area"></i>Neue Fläche</a>
-            <a href="{{ url_for('naju.home') }}"><i class="fas fa-upload"></i>Tabelle Importieren</a>
-            <p></p>
             <a href="{{url_for('naju.home')}}"><i class="fas fa-home"></i>Home</a>
             {% if g.user is not none %}
             <a href="{{url_for('naju.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
             {% endif %}
-            <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
+
             {% if g.user is not none and g.user['level'] > 0 %}
             <a href="{{url_for('admin.accounts')}}"><i class="fas fa-users"></i>Accounts</a>
             {% endif %}
+            <p></p>
+            <a href="{{url_for('naju.add_tree')}}"><i class="fas fa-tree"></i>Neuer Baum</a>
+            <a href="{{url_for('naju.add_area')}}"><i class="fas fa-chart-area"></i>Neue Fläche</a>
+            <p></p>
+
+
+            <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
         </div>
         <div class="mobile-side-footer">
             <a href="{{ url_for('naju.imprint') }}">Impressum</a>

@@ -13,7 +13,7 @@ body {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    background-color: lightgreen;
+    background-color: #41a424;
 }
 
 #page-section {
@@ -114,7 +114,7 @@ body {
 
 .help {
     right: 11rem;
-    top: -2.1rem;
+    top: 0rem;
     width: auto;
     height: auto;
     background: white;
@@ -126,7 +126,7 @@ body {
 .logout {
     left: 5rem;
     right: initial;
-    top: -2.1rem;
+    top: 0rem;
     width: auto;
     height: auto;
     background: white;
@@ -138,7 +138,7 @@ body {
 .home {
     left: 1rem;
     right: initial;
-    top: -2.1rem;
+    top: 0rem;
     width: auto;
     height: auto;
     background: white;
@@ -150,7 +150,7 @@ body {
 .accounts {
     left: 9rem;
     right: initial;
-    top: -2.1rem;
+    top: 0rem;
     width: auto;
     height: auto;
     background: white;
@@ -287,7 +287,7 @@ p {
     bottom: -2px;
     width: 0%;
     height: 2px;
-    background-color: green;
+    background-color: #1715ed;
     transition: .4s;
 }
 
@@ -312,20 +312,20 @@ p {
 }
 
 .input-div.focus .i i {
-    color: green;
+    color: #1715ed;
 }
 
 .input-div.focus > div > h5 {
     top: -5px;
     font-size: 0.75em;
-    color: green;
+    color: #1715ed;
 }
 
 h5.active {
     top: -5px;
     font-size: 0.75em;
     background: none;
-    color: green;
+    color: #1715ed;
 }
 
 .i {
@@ -784,6 +784,83 @@ table a:hover, li a:hover, .area-special a:hover {
     border-bottom: initial;
 }
 
+.mobile-top {
+    display: flex;
+    background: lightgray;
+}
+
+.mobile-top h1 {
+    font-size: 1.5rem;
+    margin: auto;
+}
+
+.mobile-top a {
+    height: 2rem;
+    width: 2rem;
+    margin-right: 1rem;
+    margin-left: 0.2rem;
+}
+
+.mobile-top a img {
+    height: 2rem;
+    width: 2rem;
+}
+
+.mobile-top i {
+    margin-left: 0.2rem;
+    margin-right: 0.7rem;
+    align-self: center;
+    border-radius: 5px;
+    padding: 0.2rem;
+    cursor: pointer;
+}
+
+.mobile-side {
+    z-index: 12;
+    background: gray;
+    position: fixed;
+    overflow: auto;
+
+    left: -18rem;
+    width: 18rem;
+    top: 0;
+    height: 100%;
+    transition: all .5s ease;
+    border-radius: 0 5px 5px 0;
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.4);
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.mobile-side-content {
+    display: flex;
+    flex-flow: column;
+    padding-top: 6px;
+}
+
+.mobile-side-content a {
+    padding: 1rem;
+    background: lightgray;
+    border-bottom: solid 1px darkgray;
+    border-top: solid 1px gray;
+    display: grid;
+    grid-template-columns: 0.2fr 1fr;
+}
+
+.mobile-side-footer {
+    margin-bottom: 0.25rem;
+
+}
+
+.mobile-side-footer a {
+    margin-left: 0.25rem;
+}
+
+.show {
+    left: 0;
+}
+
 @keyframes fade-out {
   from {opacity: 1;}
   to {opacity: 0;}
@@ -842,84 +919,5 @@ table a:hover, li a:hover, .area-special a:hover {
 
     .mobile.main_page {
         flex-direction: column;
-    }
-
-    .mobile-top {
-        display: flex;
-        background: lightgray;
-    }
-
-    .mobile-top h1 {
-        font-size: 1.5rem;
-        margin: auto;
-    }
-
-    .mobile-top a {
-        height: 2rem;
-        width: 2rem;
-        margin-right: 1rem;
-        margin-left: 0.2rem;
-    }
-
-    .mobile-top a img {
-        height: 2rem;
-        width: 2rem;
-    }
-
-    .mobile-top i {
-        margin-left: 0.2rem;
-        margin-right: 0.7rem;
-        align-self: center;
-        border-radius: 5px;
-        padding: 0.2rem;
-        cursor: pointer;
-    }
-
-    .mobile-side {
-        z-index: 12;
-        background: gray;
-        position: fixed;
-        overflow: auto;
-
-        left: -18rem;
-        width: 18rem;
-        top: 0;
-        height: 100%;
-        transition: all .5s ease;
-        border-radius: 0 5px 5px 0;
-        box-shadow: 0 15px 20px rgba(255, 255, 255, 0.2);
-
-        display: grid;
-        grid-template-rows: 1fr auto;
-    }
-
-    .mobile-side-content {
-        display: flex;
-        flex-flow: column;
-        padding-top: 6px;
-    }
-
-    .mobile-side-content a {
-        padding: 1rem;
-        background: lightgray;
-        border-bottom: solid 1px darkgray;
-        border-top: solid 1px gray;
-    }
-
-    .mobile-side-content a i {
-        margin-right: 1.25rem;
-    }
-
-    .mobile-side-footer {
-        margin-bottom: 0.25rem;
-
-    }
-
-    .mobile-side-footer a {
-        margin-left: 0.25rem;
-    }
-
-    .show {
-        left: 0;
     }
 }

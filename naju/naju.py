@@ -87,7 +87,7 @@ def index():
 
     if request.method == 'POST':
         try:
-            username = request.form['username']
+            username = str(request.form['username']).lower()
             password = request.form['password']
         except:
             flash('Post incorrect!')
@@ -223,15 +223,33 @@ def home():
 
     db = get_db()
 
-    trees = db.execute("SELECT * FROM tree t, area a WHERE t.area_id = a.id ORDER BY a.name, t.number").fetchall()
+    trees = db.execute("SELECT * FROM tree t, area a WHERE t.area_id = a.id ORDER BY name, number").fetchall()
 
-    values = db.execute("SELECT * FROM tree_param ORDER BY param_id").fetchall()
+    params = db.execute("SELECT * FROM tree_param_type ORDER BY order_id, name").fetchall()
 
-    params = db.execute("SELECT * FROM tree_param_type ORDER BY name").fetchall()
+    areas = db.execute("SELECT * FROM area a ORDER BY name").fetchall()
 
-    areas = db.execute("SELECT * FROM area a").fetchall()
+    datas = []
 
-    return render_template('naju/main.html', trees=trees, values=values, params=params, areas=areas)
+    from markupsafe import escape
+
+    for tree in trees:
+        data = '<tr><td class="searchable Fläche"><a href="' + url_for('naju.area', id=tree['area_id']) + '">' + str(escape(tree['name'])) + '</a></td>'
+        data += '<td class="searchable Nummer">' + str(escape(tree['number'])) + '</td>'
+
+        for par in params:
+            value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ", (tree['id'], par['id'])).fetchone()
+            if par['type'] == 'Link':
+                data += '<td class="searchable ' + str(escape(par['name'])) + '"><a href="' + str(escape(value['value'])) + '">' + str(escape(value['value'])) + '</a></td>'
+            else:
+                data += '<td class="searchable ' + str(escape(par['name'])) + '">' + str(escape(value['value'])) + '</td>'
+
+        data += '<td class="editable-cell"><a href="' + url_for('naju.edit_tree', id=tree['id']) + '"><i class="far fa-edit"></i></a></td>'
+        data += '<td class="editable-cell"><a href="' + url_for('naju.delete_tree', id=tree['id']) + """" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!)"><i class="fas fa-trash"></i></a></td>"""
+        data += '</tr>'
+        datas.append(data)
+
+    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=trees)
 
 
 @bp.route('/home/download/<string:type>/<string:filter>', methods=['GET'])
@@ -371,7 +389,7 @@ def add_param():
             error = "Dieser Parameter existirt bereits"
 
         if error is None:
-            db.execute('INSERT INTO tree_param_type (name, type) VALUES (?, ?)', (name, type))
+            db.execute('INSERT INTO tree_param_type (name, type, order_id) VALUES (?, ?, ?)', (name, type, 0))
 
             param = db.execute('SELECT * FROM tree_param_type WHERE name=? AND type=?', (name, type)).fetchone()
 
@@ -512,6 +530,7 @@ def edit_param(id):
         try:
             name = request.form['name']
             type = request.form['type']
+            order_id = request.form['number']
         except:
             flash('Post incorrect!')
             print('Post incorrect!')
@@ -532,7 +551,7 @@ def edit_param(id):
             error = "Dieser Parameter existirt bereits"
 
         if error is None:
-            db.execute('UPDATE tree_param_type SET name=?, type=? WHERE id=?', (name, type, id))
+            db.execute('UPDATE tree_param_type SET name=?, type=?, order_id=? WHERE id=?', (name, type, order_id, id))
 
             db.commit()
 
@@ -672,5 +691,14 @@ def update_data():
             path = os.path.join(current_app.instance_path, 'assets', 'uploads', str(time.time()) + filename + '.xml')
             os.makedirs(path, exist_ok=True)
             data.save(path)
-            read_xml.read(path)
-    return redirect(url_for('naju.index'))
+            if read_xml.read(path):
+                db = get_db()
+
+                trees = db.execute('SELECT * FROM tree').fetchall()
+                areas = db.execute('SELECT * FROM area').fetchall()
+                tree_params = db.execute('SELECT * FROM tree_param').fetchall()
+                tree_param_types = db.execute('SELECT * FROM tree_param_type').fetchall()
+
+                return render_template('export.html', trees=trees, areas=areas,
+                                       tree_params=tree_params, tree_param_types=tree_param_types)
+    return 'Fehler: Falscher Benutzername oder Passwort'

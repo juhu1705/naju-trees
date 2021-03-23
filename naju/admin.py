@@ -30,7 +30,7 @@ def admin_required(view):
 def register():
     if request.method == 'POST':
         try:
-            username = request.form['username']
+            username = str(request.form['username']).lower()
             mail = request.form['mail']
             agreement = request.form['agreement']
         except:
@@ -73,7 +73,7 @@ def reset_password(token):
         return redirect('naju.index')
     if request.method == 'POST':
         try:
-            username = request.form['username']
+            username = str(request.form['username']).lower()
             password = request.form['password']
             check = request.form['passwordcheck']
             agreement = request.form['agreement']
@@ -109,7 +109,6 @@ def reset_password(token):
 
         flash('Maybe your username was typed wrong. Please try again!')
     return render_template('naju/activate_user.html')
-
 
 
 @bp.route('/accounts')
