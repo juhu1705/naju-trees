@@ -850,7 +850,7 @@ table a:hover, li a:hover, .area-special a:hover {
 
 .mobile-side-footer {
     margin-bottom: 0.25rem;
-
+    margin-left: 0.7rem;
 }
 
 .mobile-side-footer a {
@@ -859,6 +859,14 @@ table a:hover, li a:hover, .area-special a:hover {
 
 .show {
     left: 0;
+}
+
+.mobile-top h1 a {
+    border-bottom: initial;
+}
+
+.mobile-top h1 a:hover {
+    border-bottom: initial;
 }
 
 @keyframes fade-out {

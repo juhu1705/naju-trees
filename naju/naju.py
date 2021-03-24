@@ -666,20 +666,6 @@ def privacy():
     return render_template('home/privacy.html')
 
 
-@bp.route('/export')
-@login_required
-def export():
-    db = get_db()
-
-    trees = db.execute('SELECT * FROM tree').fetchall()
-    areas = db.execute('SELECT * FROM area').fetchall()
-    tree_params = db.execute('SELECT * FROM tree_param').fetchall()
-    tree_param_types = db.execute('SELECT * FROM tree_param_type').fetchall()
-
-    return render_template('export.html', trees=trees, areas=areas,
-                           tree_params=tree_params, tree_param_types=tree_param_types)
-
-
 @bp.route('/update', methods=('GET', 'POST'))
 def update_data():
     if request.method == 'POST':
@@ -694,8 +680,9 @@ def update_data():
             filename = secure_filename(data.filename)
             filename = filename.rsplit('.')[0]
             import time
-            path = os.path.join(current_app.instance_path, 'assets', 'uploads', str(time.time()) + filename + '.xml')
+            path = os.path.join(current_app.instance_path, 'assets', 'uploads')
             os.makedirs(path, exist_ok=True)
+            path = os.path.join(path, str(time.time()) + filename + '.xml')
             data.save(path)
             if read_xml.read(path):
                 db = get_db()
@@ -707,4 +694,5 @@ def update_data():
 
                 return render_template('export.html', trees=trees, areas=areas,
                                        tree_params=tree_params, tree_param_types=tree_param_types)
-    return 'Fehler: Falscher Benutzername oder Passwort'
+        return 'Fehler: Falscher Benutzername oder Passwort'
+    return render_template('import.html')
