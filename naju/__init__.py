@@ -6,7 +6,7 @@ from flask import Flask
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(SECRET_KEY='219z4r34äc3ü696567ß50917325#897235jhkle65bju#5',
+    app.config.from_mapping(SECRET_KEY=read_or_generate_secret_key(app),
                             DATABASE=os.path.join(app.instance_path, 'dfs.sqlite'))
 
     if test_config is None:
@@ -30,3 +30,18 @@ def create_app(test_config=None):
     app.register_blueprint(admin.bp)
 
     return app
+
+
+def read_or_generate_secret_key(app: Flask) -> bytes:
+    """ Liest den Secret Key aus bzw. generiert ihn, falls noch keiner vorhanden ist. """
+    secret_key_path = os.path.join(app.instance_path, "SECRET_KEY")
+
+    if not os.path.isfile(secret_key_path):
+        with open(os.open(secret_key_path, os.O_WRONLY | os.O_CREAT, mode=0o600), "wb") as file:
+            secret_key = os.urandom(128)
+            file.write(secret_key)
+    else:
+        with open(secret_key_path, "rb") as file:
+            secret_key = file.read()
+
+    return secret_key

@@ -31,11 +31,12 @@ def register():
     if request.method == 'POST':
         try:
             username = str(request.form['username']).lower()
-            mail = request.form['mail']
+            mail = str(request.form['mail']).lower()
             agreement = request.form['agreement']
         except:
             flash('Post incorrect!')
-            flash('Unter umständen wurde der Datenschutzvereinbarung nicht zugestimmt! Diese Zustimmung ist erforderlich!')
+            flash('Unter umständen wurde der Datenschutzvereinbarung nicht zugestimmt! Diese Zustimmung ist '
+                  'erforderlich!')
             return redirect(url_for('naju.index'))
         db = get_db()
         error = None

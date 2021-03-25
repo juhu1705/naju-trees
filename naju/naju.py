@@ -87,8 +87,9 @@ def index():
 
     if request.method == 'POST':
         try:
-            username = str(request.form['username']).lower()
+            test_name = request.form['username']
             password = request.form['password']
+            username = str(test_name).lower()
         except:
             flash('Post incorrect!')
             print('Post incorrect!')
@@ -97,7 +98,7 @@ def index():
         db = get_db()
         error = None
 
-        user = db.execute('SELECT * FROM user WHERE name = ? OR email = ?', (username, username,)).fetchone()
+        user = db.execute('SELECT * FROM user WHERE name = ? OR email = ? OR name = ?', (username, username, test_name)).fetchone()
 
         if password == '':
             error = 'Das Passwort ist falsch!'
@@ -122,8 +123,8 @@ def index():
 def reset_password_request():
     if request.method == 'POST':
         try:
-            username = request.form['username']
-            mail = request.form['mail']
+            username = str(request.form['username']).lower()
+            mail = str(request.form['mail']).lower()
         except:
             flash('Post incorrect!')
             print('Post incorrect!')
@@ -157,7 +158,7 @@ def password_reset(token):
     if user is not None:
         if request.method == 'POST':
             try:
-                name = request.form['username']
+                name = str(request.form['username']).lower()
                 password = request.form['password']
                 check = request.form['passwordcheck']
             except:
@@ -672,8 +673,7 @@ def update_data():
         try:
             data = request.files['data']
         except:
-            flash('Daten sind nicht richtig angegenben!')
-            return redirect(url_for('naju.index'))
+            return 'Fehler: Daten sind falsch angegeben'
 
         if data and allowed_file(data.filename):
             from . import read_xml

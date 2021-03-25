@@ -787,6 +787,11 @@ table a:hover, li a:hover, .area-special a:hover {
 .mobile-top {
     display: flex;
     background: lightgray;
+    position: fixed;
+    width: 100%;
+    z-index: 5;
+    border-bottom: 1px solid darkgray;
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.4);
 }
 
 .mobile-top h1 {
@@ -927,5 +932,25 @@ table a:hover, li a:hover, .area-special a:hover {
 
     .mobile.main_page {
         flex-direction: column;
+    }
+
+    .mobile-top h1 {
+        font-size: 1.25rem;
+        margin: auto;
+        padding-right: 3rem;
+    }
+
+    .logo {
+        z-index: 10;
+        position: fixed;
+        overflow: auto;
+        top: 0rem;
+        right: 0.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        transition: all .5s ease;
+        border-radius: 0;
+        filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.6));
+        border-bottom: initial;
     }
 }
