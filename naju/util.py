@@ -1,4 +1,5 @@
 import random
+from typing import SupportsInt, Union
 
 SYSTEM_RANDOM = random.SystemRandom()
 URI_SAFE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_'
@@ -12,3 +13,11 @@ def random_uri_safe_string(length: int) -> str:
 def check_email(email):
     import re
     return re.search(EMAIL_RE, email)
+
+
+def nbit_int(x: Union[str, bytes, SupportsInt], base=10, maxbits=32) -> int:
+    result = int(x, base)
+    if result.bit_length() > maxbits:
+        raise ValueError(f"integer exceeds {maxbits}-bit limit")
+
+    return result

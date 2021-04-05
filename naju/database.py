@@ -68,7 +68,8 @@ def load_xlsx_file():
 def add_teacher(name, admin=2):
     user = get_db().execute('SELECT * FROM user WHERE name = ?', (name,)).fetchone()
     if not user:
-        click.echo('Was, das wollen sie wirklich tun? Einen unschuldigen Benutzer verdoppeln. NIEMALS!')
+        click.echo('IRGENDEIN FEHLER SCHEINT HIER AUFGETRETEN ZU SEIN! HOHLT IHN VON DER BÜHNE!!!! (Der gewünschte '
+                   'Benutzer konnte nicht gefunden werden)')
         return 1
 
     get_db().execute('UPDATE user SET level=? WHERE name=?', (admin, name))

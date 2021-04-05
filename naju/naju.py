@@ -1,6 +1,7 @@
 import functools
 import os
 import re
+from urllib.parse import urlparse
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, send_from_directory,
@@ -10,7 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 from naju.database import get_db
-from naju.util import random_uri_safe_string
+from naju.util import random_uri_safe_string, nbit_int
 
 bp = Blueprint('naju', __name__)
 
@@ -23,40 +24,23 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def find(string):
-    regex = re.compile(
-        r'^(?:http|ftp)s?://'  # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-        r'localhost|'  # localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-        r'(?::\d+)?'  # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-    url = re.match(regex, string)
-    return url
-
-
-def is_link(text):
-    return find(text)
-
-
-def get_link(text):
-    if not find(text):
-        return "https://essen.naju-nrw.de/"
-    return text
+def is_http_url(string):
+    o = urlparse(string)
+    return o.scheme in ('http', 'https') and len(o.netloc) > 0
 
 
 types = ("Text", "Datum", "Nummer", "Kommazahl", "Link", "Wahr / Falsch")
 
 
 def is_type_valid(param_type):
-    return types.__contains__(param_type)
+    return param_type in types
 
 
 def is_param_valid(param, type):
     if not is_type_valid(type):
         return False
     if type == "Link":
-        return is_link(param)
+        return is_http_url(param)
     return True
 
 
@@ -285,14 +269,16 @@ def add_tree():
         if number is None:
             error = "Es wird eine Nummer benötigt"
 
-        if not str(number).isnumeric() or len(number) > 10:
+        try:
+            number = nbit_int(number)
+        except ValueError:
             error = "Es wird eine Zahl benötigt"
 
         db = get_db()
         check = None
         if error is None:
             check = db.execute("SELECT * FROM tree t, area a WHERE a.id = t.area_id AND t.number = ? AND a.name = ?",
-                               (int(number), area)).fetchone()
+                               (number, area)).fetchone()
         if check is not None:
             error = "Dieser Baum existiert bereits!"
 
@@ -300,12 +286,12 @@ def add_tree():
             area_id = db.execute("SELECT id FROM area WHERE name = ?", (area,)).fetchone()
 
             db.execute("INSERT INTO tree (number, area_id) VALUES (?, ?)",
-                       (int(number), area_id['id']))
+                       (number, area_id['id']))
 
             params = db.execute('SELECT * FROM tree_param_type').fetchall()
 
             tree = db.execute('SELECT * FROM tree WHERE number = ? AND area_id = ?',
-                              (int(number), area_id['id'])).fetchone()
+                              (number, area_id['id'])).fetchone()
 
             for param in params:
                 db.execute("INSERT INTO tree_param (tree_id, param_id, value) VALUES (?, ?, ?)",
@@ -343,10 +329,8 @@ def add_area():
             error = "Es wird ein kürzel benötigt"
         if address is None:
             error = "Es wird eine Addresse benötigt"
-        if link is None or not is_link(link):
+        if link is None or not is_http_url(link):
             error = "Es wird ein Link benötigt"
-
-        link = get_link(link)
 
         db = get_db()
         check = db.execute("SELECT * FROM area WHERE short = ? OR name = ?", (short, name)).fetchone()
@@ -429,12 +413,14 @@ def edit_tree(id):
             return render_template('naju/edit_tree.html', tree=tree, params=params)
 
         if number != tree['number']:
-            if str(number).isnumeric() or len(number) > 10:
+            try:
+                number = nbit_int(number)
+            except ValueError:
                 flash("Bitte gebe eine valide Zahl an!")
                 return render_template('naju/edit_tree.html', tree=tree, params=params)
 
             check = db.execute("SELECT * FROM tree t, area a WHERE a.id = t.area_id AND t.number = ? AND a.id = ?",
-                               (int(number), tree['area_id'])).fetchone()
+                               (number, tree['area_id'])).fetchone()
 
             if check is not None and check['id'] != id:
                 flash("Dieser Baum existiert bereits!")
@@ -498,9 +484,8 @@ def edit_area(id):
             error = "Es wird ein kürzel benötigt"
         if address is None:
             error = "Es wird eine Addresse benötigt"
-        if link is None or not is_link(link):
+        if link is None or not is_http_url(link):
             error = "Es wird ein Link benötigt"
-        link = get_link(link)
 
         check = db.execute("SELECT * FROM area WHERE short = ? OR name = ?", (short, name)).fetchone()
         if check is not None and check['id'] != id:
@@ -673,7 +658,7 @@ def update_data():
         try:
             data = request.files['data']
         except:
-            return 'Fehler: Daten sind falsch angegeben'
+            return '<error>Fehler: Daten sind falsch angegeben</error>'
 
         if data and allowed_file(data.filename):
             from . import read_xml
@@ -694,5 +679,5 @@ def update_data():
 
                 return render_template('export.html', trees=trees, areas=areas,
                                        tree_params=tree_params, tree_param_types=tree_param_types)
-        return 'Fehler: Falscher Benutzername oder Passwort'
+        return '<error>Fehler: Falscher Benutzername oder Passwort</error>'
     return render_template('import.html')

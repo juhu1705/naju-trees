@@ -50,6 +50,15 @@ def handle_area(document, db=get_db()):
 
         id = to_edit['id']
 
+        if area.attributes['delete'].value == 'delete':
+            trees = db.execute('SELECT * FROM tree WHERE area_id=?', (id,)).fetchall()
+
+            for tree in trees:
+                db.execute('DELETE FROM tree WHERE id=?', (tree['id'],))
+                db.execute('DELETE FROM tree_param WHERE tree_id=?', (tree['id'],))
+
+            db.execute('DELETE FROM area WHERE id=?', (id,))
+            continue
         if area.firstChild.data != to_edit['name']:
             db.execute("UPDATE area SET name=? WHERE id=?",
                        (area.firstChild.data, id))
@@ -62,14 +71,6 @@ def handle_area(document, db=get_db()):
         if area.attributes['link'].value != to_edit['link']:
             db.execute("UPDATE area SET link=? WHERE id=?",
                        (area.attributes['link'].value, id))
-        if area.attributes['delete'].value == 'delete':
-            trees = db.execute('SELECT * FROM tree WHERE area_id=?', (id,)).fetchall()
-
-            for tree in trees:
-                db.execute('DELETE FROM tree WHERE id=?', (tree['id'],))
-                db.execute('DELETE FROM tree_param WHERE tree_id=?', (tree['id'],))
-
-            db.execute('DELETE FROM area WHERE id=?', (id,))
 
 
 def handle_trees(document, db=get_db()):
@@ -89,12 +90,13 @@ def handle_trees(document, db=get_db()):
             to_edit = db.execute('SELECT * FROM tree WHERE number = ? AND area_id = ?',
                                  (tree.attributes['number'].value, area['id'])).fetchone()
 
-        if to_edit['number'] != tree.firstChild.data:
-            db.execute("UPDATE tree SET number=? WHERE id=?",
-                       (area.firstChild.data, to_edit['id']))
         if tree.attributes['delete'].value == 'delete':
             db.execute('DELETE FROM tree WHERE id=?', (to_edit['id'],))
             db.execute('DELETE FROM tree_param WHERE tree_id=?', (to_edit['id'],))
+            continue
+        if to_edit['number'] != tree.firstChild.data:
+            db.execute("UPDATE tree SET number=? WHERE id=?",
+                       (area.firstChild.data, to_edit['id']))
 
 
 def handle_param_types(document, db=get_db()):
@@ -111,6 +113,10 @@ def handle_param_types(document, db=get_db()):
             to_edit = db.execute('SELECT * FROM tree_param_type WHERE name = ?',
                                  (param_type.attributes['name'].value, )).fetchone()
 
+        if param_type.attributes['delete'].value == 'delete':
+            db.execute('DELETE FROM tree_param WHERE param_id=?', (to_edit['id'],))
+            db.execute('DELETE FROM tree_param_type WHERE id=?', (to_edit['id'],))
+            continue
         if to_edit['name'] != param_type.firstChild.data:
             db.execute("UPDATE tree_param_type SET name=? WHERE id=?",
                        (param_type.firstChild.data, to_edit['id']))
@@ -120,9 +126,6 @@ def handle_param_types(document, db=get_db()):
         if to_edit['order_id'] != param_type.firstChild.data:
             db.execute("UPDATE tree_param_type SET order_id=? WHERE id=?",
                        (param_type.attributes['order_id'].value, to_edit['id']))
-        if param_type.attributes['delete'].value == 'delete':
-            db.execute('DELETE FROM tree_param WHERE param_id=?', (to_edit['id'],))
-            db.execute('DELETE FROM tree_param_type WHERE id=?', (to_edit['id'],))
 
 
 def handle_params(document, db=get_db()):
