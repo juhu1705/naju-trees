@@ -224,7 +224,9 @@ def home():
 
         for par in params:
             value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ", (tree['id'], par['id'])).fetchone()
-            if par['type'] == 'Link':
+            if value is None:
+                data += '<td class="searchable ' + str(escape(par['name'])) + '">None</td>'
+            elif par['type'] == 'Link':
                 data += '<td class="searchable ' + str(escape(par['name'])) + '"><a href="' + str(escape(value['value'])) + '">' + str(escape(value['value'])) + '</a></td>'
             else:
                 data += '<td class="searchable ' + str(escape(par['name'])) + '">' + str(escape(value['value'])) + '</td>'
