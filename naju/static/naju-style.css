@@ -738,6 +738,78 @@ table tbody tr:nth-child(2n) {
     opacity: 0;
 }
 
+/*  ======
+    FILTER
+    ======  */
+
+.filters {
+    margin-top: 1rem;
+    display: flex;
+    column-gap: 2rem;
+}
+
+.filters h2 {
+    margin-right: 2rem;
+    font-size: 1.5rem;
+    align-self: center;
+}
+
+.filter_entry {
+    display: flex;
+    column-gap: 1rem;
+    background: rgba(0, 0, 0, 20%);
+    border-radius: 5px;
+    padding: 0.3rem;
+	font-size: 1rem;
+	align-self: center;
+
+    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.3));
+}
+
+.filter_text {
+    align-self: center;
+}
+
+.filter-delete {
+    border-radius: 5px;
+    padding: 0.2rem 0.4rem;
+    background: rgba(0, 0, 0, 20%);
+    border-bottom: initial;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.filter-delete:hover {
+    background: rgba(0, 0, 0, 40%);
+    color: white;
+    border-bottom: initial;
+}
+
+.filter_page {
+    z-index: 10;
+    position: fixed;
+    overflow: auto;
+    top: -100%;
+    bottom: +110%;
+    left: 4rem;
+    right: 4rem;
+    transition: all .5s ease;
+    background: #41a424;
+    border-radius: 5px;
+    filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.8));
+    border-bottom: initial;
+    scrollbar-width: thin;
+}
+
+.filter_page.open {
+    top: 4rem;
+    bottom: 4rem;
+}
+
+.filter_spacer {
+    padding: 2rem;
+}
+
 /*  =======================
     PRIVACY IMPRINT LICENCE
     ======================= */
@@ -927,6 +999,10 @@ table a:hover, li a:hover, .area-special a:hover {
     .mobile {
         display: none;
     }
+
+    #android_app {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 70em) {
@@ -936,6 +1012,10 @@ table a:hover, li a:hover, .area-special a:hover {
 
     .mobile {
         display: flex;
+    }
+
+    #android_app {
+        display: grid;
     }
 
     .mobile.main_page {

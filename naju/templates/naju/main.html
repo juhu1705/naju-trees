@@ -1,6 +1,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="filter_page">
+    <div class="filter_spacer">
+        <div class="title area-special">
+            <h2>Filter hinzufügen</h2>
+            <div class="filter-delete" onclick="open_filters()"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="input-div selector-line">
+            <div class="i">
+                <i class="fas fa-tag"></i>
+            </div>
+            <div class="div">
+                <h5>Spalte</h5>
+
+                <div class="select-box area">
+                    <div class="option-container area">
+                        <div class="option Nummer">
+                            <input type="radio" class="radio" id="sidebar-number" name="category">
+                            <label for="sidebar-number">Nummer</label>
+                        </div>
+                        <div class="option Fläche">
+                            <input type="radio" class="radio" id="sidebar-area" name="category">
+                            <label for="sidebar-area">Fläche</label>
+                        </div>
+                        {% for param in params %}
+                        <div class="option {{param['name']}}">
+                            <input type="radio" class="radio" id="sidebar-{{param['name']}}" name="category">
+                            <label for="sidebar-{{param['name']}}">{{param['name']}}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <input class="input selected visible" name="type" id="type" value="Nummer" readonly="readonly">
+
+                    <div class="search-box">
+                        <input type="text" placeholder="Suche..." />
+                    </div>
+                </div>
+
+            </div>
+            <div class="i arrow">
+                <i class="fas fa-angle-down"></i>
+            </div>
+        </div>
+        <div class="input-div pass">
+            <div class="i">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="div">
+                <h5>Suche</h5>
+                <input class="input" type="text" name="text" id="search">
+            </div>
+        </div>
+        <div class="confirm-field">
+            <button id="btnconfirm" onclick="add_type_filter()">
+                <div><span>Hinzufügen</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 <form class="main_page desktop" method="post" style="min-height: 80vh;" autocomplete="off">
     <div class="confirm-field">
         <ul class="header-links">
@@ -9,59 +69,19 @@
         </ul>
     </div>
     <div class="filter-line">
-        <h2 style="align-self: center;">Bäume</h2>
-
-        <div class="input-div line4 no-margin">
-            <div class="i">
-                <i class="fas fa-tag"></i>
-            </div>
-
-
-            <div class="div">
-                <h5 class="selection-header">Filter</h5>
-
-
-                <div class="select-box new_tag">
-                    <div class="option-container new_tag">
-                        {% for tag in params %}
-                        <div class="option tags">
-                            <input type="radio" class="radio" id="{{tag['name']}}" name="category">
-                            <label for="{{tag['name']}}">{{tag['name']}}</label>
-                        </div>
-                        {% endfor %}
-
-                        <div class="option tags">
-                            <input type="radio" class="radio" id="Fläche" name="category">
-                            <label for="Fläche">Fläche</label>
-                        </div>
-                        <div class="option tags">
-                            <input type="radio" class="radio" id="Nummer" name="category">
-                            <label for="Nummer">Nummer</label>
-                        </div>
-                    </div>
-
-                    <input class="selected" name="select_tag" id="select_tag" readonly="readonly">
-
-
-                    <div class="search-box">
-                        <input type="text" placeholder="Suche..." />
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="i arrow">
-                <i class="fas fa-angle-down"></i>
-            </div>
-
-            <div class="div">
-                <h5>Suche</h5>
-
-                <input class="input second" type="text" name="tag" id="search" onkeyup="add_filter()">
-            </div>
-
+        <h2 style="align-self: center; font-size: 2rem;">Bäume</h2>
+    </div>
+    <div class="filters">
+        <h2>Filter:</h2>
+        {% for filter in filters %}
+        <div class="filter_entry">
+            <div class="filter_text">{{filter[0] + ": " + filter[1]}}</div>
+            <div class="filter-delete" onclick="remove_type_filter('{{filter[0]}}', '{{filter[1]}}')"><i class="fas fa-times"></i></div>
         </div>
-
+        {% endfor %}
+        <div class="filter_entry">
+            <div class="filter-delete" onclick="open_filters()"><i class="fas fa-plus"></i></div>
+        </div>
     </div>
     <table>
         <thead>

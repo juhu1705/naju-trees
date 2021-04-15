@@ -343,4 +343,29 @@ function holdOpen() {
     open = open + 1;
 }
 
+function open_filters() {
+    var bars = document.querySelectorAll(".filter_page");
+    var i;
+    for(i = 0; i < bars.length; i++) {
+        bars[i].classList.toggle("open");
+    }
+}
+
+function add_type_filter() {
+    var loc = location.href;
+
+    var input1 = document.getElementById("type");
+    var input2 = document.getElementById("search");
+
+    location.href = loc + input1.value + ":" + input2.value + "|";
+}
+
+function remove_type_filter(type_filter, type_search) {
+    var loc = location.href;
+
+    var remove_filter = type_filter + ":" + type_search + "|";
+
+    location.href = decodeURI(loc).replace(remove_filter, "");
+}
+
 

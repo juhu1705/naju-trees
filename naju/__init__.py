@@ -6,6 +6,9 @@ from flask import Flask
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+
+    os.makedirs(app.instance_path, exist_ok=True)
+
     app.config.from_mapping(SECRET_KEY=read_or_generate_secret_key(app),
                             DATABASE=os.path.join(app.instance_path, 'dfs.sqlite'))
 
@@ -14,7 +17,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    os.makedirs(app.instance_path, exist_ok=True)
     os.makedirs(os.path.join(app.instance_path, 'assets/pictures/profile'), exist_ok=True)
 
     # thread = Thread(target=server.run)

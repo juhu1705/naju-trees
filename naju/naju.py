@@ -173,37 +173,16 @@ def logout():
     return redirect(url_for('naju.index'))
 
 
-@bp.route('/home', methods=('GET', 'POST'))
+@bp.route('/home/', methods=('GET', 'POST'))
 @login_required
 def home():
     if request.method == 'POST':
-        area_filter = ""
-        try:
-            type = request.form['select_tag']
-            filter = request.form['tag']
-        except:
-            type = ""
-            filter = ""
-            try:
-                area_filter = request.form['area_select']
-            except:
-                area_filter = ""
-
         import naju.excel as e
-        if type != "":
-            file = e.create_table(type, filter)
-        elif area_filter != "":
-            file = e.create_table('Fläche', area_filter)
-        else:
-            file = e.create_table(type, filter)
 
-        if filter == "":
-            if area_filter == "":
-                attachment_name = "Baumbestand.xlsx"
-            else:
-                attachment_name = "Baumbestand_" + area_filter + ".xlsx"
-        else:
-            attachment_name = "Baumbestand_" + filter + ".xlsx"
+        file = e.create_table()
+
+        attachment_name = "Baumbestand.xlsx"
+
         return send_file(file, as_attachment=True, attachment_filename=attachment_name)
 
     db = get_db()
@@ -236,7 +215,105 @@ def home():
         data += '</tr>'
         datas.append(data)
 
-    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=trees)
+    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=trees, filters=[])
+
+
+@bp.route('/home/<search>', methods=('GET', 'POST'))
+@login_required
+def filtered_home(search=''):
+    if search == '':
+        return redirect(url_for('naju.home'))
+
+    filters = search.rsplit('|', -1)
+    filter_datas = []
+
+    for search_filter in filters:
+        expressions = search_filter.rsplit(':')
+        if len(expressions) < 2:
+            continue
+
+        filter_type = expressions[0]
+        filter_search = expressions[1]
+        filter_datas.append([filter_type, filter_search])
+
+    if request.method == 'POST':
+        import naju.excel as e
+
+        file = e.create_table(filters=filters)
+
+        attachment_name = "Baumbestand_" + search + ".xlsx"
+        return send_file(file, as_attachment=True, attachment_filename=attachment_name)
+
+    db = get_db()
+
+    trees = db.execute("SELECT * FROM tree t, area a WHERE t.area_id = a.id ORDER BY name, number").fetchall()
+
+    params = db.execute("SELECT * FROM tree_param_type ORDER BY order_id, name").fetchall()
+
+    areas = db.execute("SELECT * FROM area a ORDER BY name").fetchall()
+
+    datas = []
+
+    from markupsafe import escape
+
+    for tree in trees:
+        is_tree_valid = True
+
+        for search_filter in filters:
+            expressions = search_filter.rsplit(':')
+            if len(expressions) < 2:
+                continue
+
+            filter_type = expressions[0]
+            filter_search = expressions[1]
+
+            if filter_type.lower() == 'nummer':
+                if str(tree['number']).lower() != filter_search.lower():
+                    is_tree_valid = False
+                    break
+            elif filter_type.lower() == 'Fläche'.lower():
+                if str(tree['name']).lower().find(filter_search.lower()) == -1:
+                    is_tree_valid = False
+                    break
+            else:
+                for par in params:
+                    if str(par['name']).lower() == filter_type.lower():
+                        value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ",
+                                           (tree['id'], par['id'])).fetchone()
+                        if value is None:
+                            is_tree_valid = False
+                            break
+                        elif str(value['value']).lower().find(filter_search.lower()) == -1 or str(value['value']) == '':
+                            is_tree_valid = False
+                            break
+
+        if not is_tree_valid:
+            continue
+
+        data = '<tr><td class="searchable Fläche"><a href="' + url_for('naju.area', id=tree['area_id']) + '">' + str(
+            escape(tree['name'])) + '</a></td>'
+        data += '<td class="searchable Nummer">' + str(escape(tree['number'])) + '</td>'
+
+        for par in params:
+            value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ",
+                               (tree['id'], par['id'])).fetchone()
+            if value is None:
+                data += '<td class="searchable ' + str(escape(par['name'])) + '">None</td>'
+            elif par['type'] == 'Link':
+                data += '<td class="searchable ' + str(escape(par['name'])) + '"><a href="' + str(
+                    escape(value['value'])) + '">' + str(escape(value['value'])) + '</a></td>'
+            else:
+                data += '<td class="searchable ' + str(escape(par['name'])) + '">' + str(
+                    escape(value['value'])) + '</td>'
+
+        data += '<td class="editable-cell"><a href="' + url_for('naju.edit_tree', id=tree[
+            'id']) + '"><i class="far fa-edit"></i></a></td>'
+        data += '<td class="editable-cell"><a href="' + url_for('naju.delete_tree', id=tree[
+            'id']) + """" onclick="return confirm('Wollen sie diesen Baum wirklich löschen? Er kann nicht wiederhergestellt werden!')"><i class="fas fa-trash"></i></a></td>"""
+        data += '</tr>'
+        datas.append(data)
+
+    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=trees, filters=filter_datas)
 
 
 @bp.route('/home/download/<string:type>/<string:filter>', methods=['GET'])
@@ -652,6 +729,13 @@ def imprint():
 @bp.route('/privacy')
 def privacy():
     return render_template('home/privacy.html')
+
+
+@bp.route('/app/android')
+def android_app():
+    file = os.path.join(current_app.instance_path, 'app-release.apk')
+
+    return send_file(file, as_attachment=True, attachment_filename='NaJu-Baumbestand.apk')
 
 
 @bp.route('/update', methods=('GET', 'POST'))

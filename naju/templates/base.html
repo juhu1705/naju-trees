@@ -33,12 +33,14 @@
             {% if g.user is not none and g.user['level'] > 0 %}
             <a href="{{url_for('admin.accounts')}}"><i class="fas fa-users"></i>Accounts</a>
             {% endif %}
+            {% if g.user is not none %}
             <p></p>
             <a href="{{url_for('naju.add_tree')}}"><i class="fas fa-tree"></i>Neuer Baum</a>
             <a href="{{url_for('naju.add_area')}}"><i class="fas fa-chart-area"></i>Neue Fläche</a>
             <p></p>
+            {% endif %}
 
-
+            <a id="android_app" href="{{url_for('naju.android_app')}}"><i class="fab fa-android"></i>Android App</a>
             <a href="{{url_for('naju.help')}}"><i class="far fa-question-circle"></i>Help</a>
         </div>
         <div class="mobile-side-footer">

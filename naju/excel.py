@@ -147,7 +147,9 @@ def load_table():
     db.commit()
 
 
-def create_table(type, filter):
+def create_table(filters=None):
+    if filters is None:
+        filters = []
     path = os.path.join(current_app.instance_path, 'tables')
     file = os.path.join(path, "type-filter.xlsx")
 
@@ -156,7 +158,7 @@ def create_table(type, filter):
     workbook = wr.Workbook(file)
 
     workbook.set_properties({
-        'title': 'Baumbestand NAJU Essen/Mülheim (' + filter + ')',
+        'title': 'Baumbestand NAJU Essen/Mülheim)',
         'author': 'Fabius Mettner',
         'company': 'NAJU - Essen/Mülheim',
         'category': 'Baumbestand',
@@ -204,7 +206,21 @@ def create_table(type, filter):
 
     for area in areas:
         try:
-            if type == "Fläche" and str(area['name']).upper().index(str(filter).upper()) < 0:
+            is_tree_valid = True
+
+            for search_filter in filters:
+                expressions = search_filter.rsplit(':')
+                if len(expressions) < 2:
+                    continue
+
+                filter_type = expressions[0]
+                filter_search = expressions[1]
+
+                if filter_type.lower() == 'Fläche'.lower() and str(area['name']).lower().find(filter_search.lower()) == -1:
+                    is_tree_valid = False
+                    break
+
+            if not is_tree_valid:
                 continue
         except ValueError:
             continue
@@ -236,18 +252,40 @@ def create_table(type, filter):
             params = db.execute('SELECT * FROM tree_param tp, tree_param_type tpt '
                                 'WHERE tp.param_id = tpt.id AND tree_id=? ORDER BY name', (tree['id'],)).fetchall()
 
-            for param in params:
-                try:
-                    if param['name'] == type and \
-                            str(param['value']).upper().index(str(filter).upper()) < 0:
-                        jump = True
-                except ValueError:
-                    jump = True
-            try:
-                if jump or (type == 'Nummer' and str(tree['number']).upper().index(str(filter).upper()) < 0):
+            is_tree_valid = True
+
+            for search_filter in filters:
+                expressions = search_filter.rsplit(':')
+                if len(expressions) < 2:
                     continue
-            except ValueError:
+
+                filter_type = expressions[0]
+                filter_search = expressions[1]
+
+                if filter_type.lower() == 'nummer':
+                    if str(tree['number']).lower() != filter_search.lower():
+                        is_tree_valid = False
+                        break
+                elif filter_type.lower() == 'Fläche'.lower():
+                    if str(area['name']).lower().find(filter_search.lower()) == -1:
+                        is_tree_valid = False
+                        break
+                else:
+                    for par in params:
+                        if str(par['name']).lower() == filter_type.lower():
+                            value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ",
+                                               (tree['id'], par['id'])).fetchone()
+                            if value is None:
+                                is_tree_valid = False
+                                break
+                            elif str(value['value']).lower().find(filter_search.lower()) == -1 or str(
+                                    value['value']) == '':
+                                is_tree_valid = False
+                                break
+
+            if not is_tree_valid:
                 continue
+
             col = 0
             if row % 2 == 1:
                 worksheet.write(row, col, tree['number'], format_1)
