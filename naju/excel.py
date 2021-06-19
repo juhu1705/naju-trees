@@ -224,7 +224,7 @@ def create_table(filters=None):
                 continue
         except ValueError:
             continue
-        worksheet = workbook.add_worksheet(area['name'])
+        worksheet = workbook.add_worksheet(str(area['name']))
 
         row = 0
         col = 0
@@ -262,6 +262,21 @@ def create_table(filters=None):
                 filter_type = expressions[0]
                 filter_search = expressions[1]
 
+                if filter_type.lower() == 'alle':
+                    is_filter_in = False
+                    if str(tree['number']).lower() == filter_search.lower():
+                        is_filter_in = True
+                    if str(area['name']).lower().find(filter_search.lower()) > -1:
+                        is_filter_in = True
+                    for par in params:
+                        value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ",
+                                           (tree['id'], par['id'])).fetchone()
+                        if str(value['value']).lower().find(filter_search.lower()) > -1:
+                            is_filter_in = True
+                            break
+                    if not is_filter_in:
+                        is_tree_valid = False
+                        break
                 if filter_type.lower() == 'nummer':
                     if str(tree['number']).lower() != filter_search.lower():
                         is_tree_valid = False

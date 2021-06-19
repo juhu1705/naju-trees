@@ -48,9 +48,11 @@ def create_user(name, email):
 
     password = click.prompt("Neues Passwort eingeben (unsichtbar)", hide_input=True)
 
+    db.execute('DELETE FROM user WHERE name = ? OR email = ?', (str(name).lower(), email))
+
     db.execute('INSERT INTO user (name, email, pwd_hash, level, email_confirmed, confirmation_token)'
                ' VALUES (?, ?, ?, ?, ?, ?)',
-               (name, email, generate_password_hash(password), 0, 1, None))
+               (str(name).lower(), email, generate_password_hash(password), 0, 1, None))
     db.commit()
 
 

@@ -16,6 +16,10 @@
 
                 <div class="select-box area">
                     <div class="option-container area">
+                        <div class="option Alle">
+                            <input type="radio" class="radio" id="sidebar-all" name="category">
+                            <label for="sidebar-all">Alle</label>
+                        </div>
                         <div class="option Nummer">
                             <input type="radio" class="radio" id="sidebar-number" name="category">
                             <label for="sidebar-number">Nummer</label>
@@ -32,7 +36,7 @@
                         {% endfor %}
                     </div>
 
-                    <input class="input selected visible" name="type" id="type" value="Nummer" readonly="readonly">
+                    <input class="input selected visible" name="type" id="type" value="Alle" readonly="readonly">
 
                     <div class="search-box">
                         <input type="text" placeholder="Suche..." />
@@ -103,38 +107,25 @@
     </table>
 </form>
 <form class="main_page mobile" method="post" autocomplete="off">
-    <div class="main_page" style="margin-bottom: -3rem;">
-        <div class="input-div selector-line">
-            <div class="i">
-                <i class="fas fa-chart-area"></i>
-            </div>
-            <div class="div">
-                <h5>Fläche</h5>
-
-                <div class="select-box area_select">
-                    <div class="option-container area_select">
-                        {% for area in areas %}
-                        <div class="option {{area['name']}}" id="{{area['id']}}">
-                            <input type="radio" class="radio" id="sidebar-{{area['id']}}" name="category">
-                            <label for="sidebar-{{area['id']}}">{{area['name']}}</label>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    {% if areas|length > 0 %}
-                    <input class="input selected visible" name="area_select" id="area_select" value="{{areas[0]['name']}}" readonly="readonly" required>
-                    {% else %}
-                    <input class="input selected visible" name="area_select" id="area_select" value="Keine Fläche gefunden" readonly="readonly" required>
-                    {% endif %}
-                    <div class="search-box">
-                        <input type="text" placeholder="Suche..." />
-                    </div>
-                </div>
-
-            </div>
-            <div class="i arrow">
-                <i class="fas fa-angle-down"></i>
-            </div>
+    <div class="confirm-field">
+        <ul class="header-links">
+            <li class="topbar"><a href="{{url_for('naju.add_tree')}}"><i class="fas fa-plus"></i><span>Neuen Baum</span></a></li>
+            <li class="topbar"><a href="{{url_for('naju.add_area')}}"><i class="fas fa-plus"></i><span>Neue Fläche</span></a></li>
+        </ul>
+    </div>
+    <div class="filter-line">
+        <h2 style="align-self: center; font-size: 2rem;">Bäume</h2>
+    </div>
+    <div class="filters">
+        <h2>Filter:</h2>
+        {% for filter in filters %}
+        <div class="filter_entry">
+            <div class="filter_text">{{filter[0] + ": " + filter[1]}}</div>
+            <div class="filter-delete" onclick="remove_type_filter('{{filter[0]}}', '{{filter[1]}}')"><i class="fas fa-times"></i></div>
+        </div>
+        {% endfor %}
+        <div class="filter_entry">
+            <div class="filter-delete" onclick="open_filters()"><i class="fas fa-plus"></i></div>
         </div>
     </div>
     <table>

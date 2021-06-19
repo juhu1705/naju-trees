@@ -85,7 +85,7 @@ def index():
         user = db.execute('SELECT * FROM user WHERE name = ? OR email = ? OR name = ?', (username, username, test_name)).fetchone()
 
         if password == '':
-            error = 'Das Passwort ist falsch!'
+            error = 'Es wurde kein Passwort angegeben!'
         elif user is None:
             error = 'Der Benutzername existiert nicht.'
         elif not check_password_hash(user['pwd_hash'], password):
@@ -267,6 +267,21 @@ def filtered_home(search=''):
             filter_type = expressions[0]
             filter_search = expressions[1]
 
+            if filter_type.lower() == 'alle':
+                is_filter_in = False
+                if str(tree['number']).lower() == filter_search.lower():
+                    is_filter_in = True
+                if str(tree['name']).lower().find(filter_search.lower()) > -1:
+                    is_filter_in = True
+                for par in params:
+                    value = db.execute("SELECT * FROM tree_param WHERE tree_id = ? AND param_id = ? ",
+                                       (tree['id'], par['id'])).fetchone()
+                    if str(value['value']).lower().find(filter_search.lower()) > -1:
+                        is_filter_in = True
+                        break
+                if not is_filter_in:
+                    is_tree_valid = False
+                    break
             if filter_type.lower() == 'nummer':
                 if str(tree['number']).lower() != filter_search.lower():
                     is_tree_valid = False
