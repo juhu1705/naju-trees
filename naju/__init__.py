@@ -19,9 +19,6 @@ def create_app(test_config=None):
 
     os.makedirs(os.path.join(app.instance_path, 'assets/pictures/profile'), exist_ok=True)
 
-    # thread = Thread(target=server.run)
-    # thread.start()
-
     from . import database
     database.init_app(app)
 

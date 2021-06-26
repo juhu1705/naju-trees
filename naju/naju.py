@@ -254,6 +254,8 @@ def filtered_home(search=''):
 
     datas = []
 
+    filtered_trees = []
+
     from markupsafe import escape
 
     for tree in trees:
@@ -305,6 +307,8 @@ def filtered_home(search=''):
         if not is_tree_valid:
             continue
 
+        filtered_trees.append(tree)
+
         data = '<tr><td class="searchable Fläche"><a href="' + url_for('naju.area', id=tree['area_id']) + '">' + str(
             escape(tree['name'])) + '</a></td>'
         data += '<td class="searchable Nummer">' + str(escape(tree['number'])) + '</td>'
@@ -328,7 +332,7 @@ def filtered_home(search=''):
         data += '</tr>'
         datas.append(data)
 
-    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=trees, filters=filter_datas)
+    return render_template('naju/main.html', datas=datas, areas=areas, params=params, trees=filtered_trees, filters=filter_datas)
 
 
 @bp.route('/home/download/<string:type>/<string:filter>', methods=['GET'])
