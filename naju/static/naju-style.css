@@ -4,6 +4,7 @@
     list-style: none;
     text-decoration: none;
     outline: none;
+    font-family: 'Lato', sans-serif;
 }
 
 body {
@@ -376,6 +377,7 @@ input {
   box-sizing: border-box;
   width: 100%;
   border-radius: 6px;
+  font-weight: bold;
 }
 
 .confirm-field {
@@ -746,6 +748,8 @@ table tbody tr:nth-child(2n) {
     margin-top: 1rem;
     display: flex;
     column-gap: 2rem;
+    flex-wrap: wrap;
+    grid-row-gap: 1rem;
 }
 
 .filters h2 {
@@ -762,8 +766,12 @@ table tbody tr:nth-child(2n) {
     padding: 0.3rem;
 	font-size: 1rem;
 	align-self: center;
-
+	height: 2rem;
     filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.3));
+}
+
+.gapless {
+    column-gap: 0rem;
 }
 
 .filter_text {
@@ -771,12 +779,28 @@ table tbody tr:nth-child(2n) {
 }
 
 .filter-delete {
-    border-radius: 5px;
-    padding: 0.2rem 0.4rem;
-    background: rgba(0, 0, 0, 20%);
     border-bottom: initial;
     cursor: pointer;
+    display: flex;
+    justify-content:center;
+    align-items:center;
     transition: all .5s ease;
+    padding: 10px;
+    background: rgba(0, 0, 0, 20%);
+    border-radius: 5px;
+}
+
+.plus-filter-icon.open i {
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+}
+
+.adding-filter {
+    display: none;
+}
+
+.adding-filter.open {
+    display: flex;
 }
 
 .filter-delete:hover {
@@ -807,7 +831,67 @@ table tbody tr:nth-child(2n) {
 }
 
 .filter_spacer {
-    padding: 2rem;
+    padding: 0;
+    display: grid;
+    grid-column-gap: 0.5rem;
+    grid-template-columns: 1fr 1fr auto;
+    transform: scaleX(0);
+    width: 0;
+}
+
+.filter_spacer.open {
+    transform: scaleX(1);
+    width: initial;
+    padding: 0rem 0 0 0.5rem;
+}
+
+.filter_div {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7% 93%;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    height: 1.5rem;
+    margin: 0.2rem;
+    padding: 0rem 0.5rem;
+}
+
+.filter_div.focus .div h5 {
+    display: none;
+}
+
+.filter_select_div {
+    grid-template-columns: 93% 7%;
+}
+
+.filter_div > div > .input,
+.filter_div > div > .input_styled {
+    position: absolute;
+    font-family: 'Lato', sans-serif;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0.5em 0.7em;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.filter_div > div {
+    position: relative;
+    min-height: 1.5rem;
+}
+
+.filter-select {
+    padding: 1px 1px 1px 0px;
+}
+
+.rotateX180 {
+    transform: rotateX(180deg);
+    transition: all 0.5s ease;
 }
 
 /*  =======================

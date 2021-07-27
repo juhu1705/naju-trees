@@ -72,8 +72,7 @@ selected.forEach(select => {
             arrowDown = select.parentNode.parentNode.parentNode.querySelector(".fa-angle-down");
             arrowUp = select.parentNode.parentNode.parentNode.querySelector(".fa-angle-up");
             if(arrowDown !== null) {
-                arrowDown.classList.remove("fa-angle-down");
-                arrowDown.classList.toggle("fa-angle-up");
+                arrowDown.classList.toggle("rotateX180");
             }
 
             if(arrowUp !== null) {
@@ -89,8 +88,7 @@ selected.forEach(select => {
         arrowDown = select.parentNode.parentNode.parentNode.querySelector(".fa-angle-down");
         arrowUp = select.parentNode.parentNode.parentNode.querySelector(".fa-angle-up");
         if(arrowDown !== null) {
-            arrowDown.classList.remove("fa-angle-down");
-            arrowDown.classList.toggle("fa-angle-up");
+            arrowDown.classList.toggle("rotateX180");
         }
 
         if(arrowUp !== null) {
@@ -117,8 +115,7 @@ selected.forEach(select => {
                 }
                 arrowUp = select.parentNode.parentNode.parentNode.querySelector(".fa-angle-up");
                 if(arrowUp !== null) {
-                    arrowUp.classList.toggle("fa-angle-down");
-                    arrowUp.classList.remove("fa-angle-up");
+                    arrowDown.classList.remove("rotateX180");
                 }
                 if(select.id == 'area_select')
                     filterByArea()
@@ -182,8 +179,7 @@ function onChangeViewSpecies() {
         element.style.display = "grid";
         e1 = this.querySelector(".fa-angle-down");
         if(e1 !== null) {
-            e1.classList.toggle("fa-angle-up");
-            e1.classList.remove("fa-angle-down");
+            e1.classList.toggle("rotateX180");
         }
         element.style.animation = 'appear .5s ease-out 0s 1';
         e2 = element.querySelector(".card");
@@ -191,8 +187,7 @@ function onChangeViewSpecies() {
     } else {
         e1 = this.querySelector(".fa-angle-up");
         if(e1 !== null) {
-            e1.classList.toggle("fa-angle-down");
-            e1.classList.remove("fa-angle-up");
+            e1.classList.remove("rotateX180");
         }
         element.style.animation = 'collapse .5s ease-out 0s 1';
         e2 = element.querySelector(".card");
@@ -344,7 +339,17 @@ function holdOpen() {
 }
 
 function open_filters() {
-    var bars = document.querySelectorAll(".filter_page");
+    var bars = document.querySelectorAll(".filter_spacer");
+    var i;
+    for(i = 0; i < bars.length; i++) {
+        bars[i].classList.toggle("open");
+    }
+    var bars = document.querySelectorAll(".adding-filter");
+    var i;
+    for(i = 0; i < bars.length; i++) {
+        bars[i].classList.toggle("open");
+    }
+    var bars = document.querySelectorAll(".plus-filter-icon");
     var i;
     for(i = 0; i < bars.length; i++) {
         bars[i].classList.toggle("open");

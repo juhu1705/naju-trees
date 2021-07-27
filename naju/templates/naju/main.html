@@ -1,77 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="filter_page">
-    <div class="filter_spacer">
-        <div class="title area-special">
-            <h2>Filter hinzufügen</h2>
-            <div class="filter-delete" onclick="open_filters()"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="input-div selector-line">
-            <div class="i">
-                <i class="fas fa-tag"></i>
-            </div>
-            <div class="div">
-                <h5>Spalte</h5>
-
-                <div class="select-box area">
-                    <div class="option-container area">
-                        <div class="option Alle">
-                            <input type="radio" class="radio" id="sidebar-all" name="category">
-                            <label for="sidebar-all">Alle</label>
-                        </div>
-                        <div class="option Nummer">
-                            <input type="radio" class="radio" id="sidebar-number" name="category">
-                            <label for="sidebar-number">Nummer</label>
-                        </div>
-                        <div class="option Fläche">
-                            <input type="radio" class="radio" id="sidebar-area" name="category">
-                            <label for="sidebar-area">Fläche</label>
-                        </div>
-                        {% for param in params %}
-                        <div class="option {{param['name']}}">
-                            <input type="radio" class="radio" id="sidebar-{{param['name']}}" name="category">
-                            <label for="sidebar-{{param['name']}}">{{param['name']}}</label>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <input class="input selected visible" name="type" id="type" value="Alle" readonly="readonly">
-
-                    <div class="search-box">
-                        <input type="text" placeholder="Suche..." />
-                    </div>
-                </div>
-
-            </div>
-            <div class="i arrow">
-                <i class="fas fa-angle-down"></i>
-            </div>
-        </div>
-        <div class="input-div pass">
-            <div class="i">
-                <i class="fas fa-search"></i>
-            </div>
-            <div class="div">
-                <h5>Suche</h5>
-                <input class="input" type="text" name="text" id="search">
-            </div>
-        </div>
-        <div class="confirm-field">
-            <button id="btnconfirm" onclick="add_type_filter()">
-                <div><span>Hinzufügen</span></div><i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
 <form class="main_page desktop" method="post" style="min-height: 80vh;" autocomplete="off">
-    <div class="confirm-field">
-        <ul class="header-links">
-            <li class="topbar"><a href="{{url_for('naju.add_tree')}}"><i class="fas fa-plus"></i><span>Neuen Baum</span></a></li>
-            <li class="topbar"><a href="{{url_for('naju.add_area')}}"><i class="fas fa-plus"></i><span>Neue Fläche</span></a></li>
-        </ul>
-    </div>
     <div class="filter-line">
         <h2 style="align-self: center; font-size: 2rem;">Bäume</h2>
     </div>
@@ -83,8 +13,58 @@
             <div class="filter-delete" onclick="remove_type_filter('{{filter[0]}}', '{{filter[1]}}')"><i class="fas fa-times"></i></div>
         </div>
         {% endfor %}
-        <div class="filter_entry">
-            <div class="filter-delete" onclick="open_filters()"><i class="fas fa-plus"></i></div>
+        <div class="filter_entry gapless">
+            <div class="filter-delete plus-filter-icon" onclick="open_filters()"><i class="fas fa-plus"></i></div>
+            <div class="filter_spacer">
+                <div class="filter_div filter_select_div">
+                    <div class="div">
+                        <div class="select-box area">
+                            <div class="option-container area">
+                                <div class="option Alle">
+                                    <input type="radio" class="radio" id="sidebar-all" name="category">
+                                    <label for="sidebar-all">Alle</label>
+                                </div>
+                                <div class="option Nummer">
+                                    <input type="radio" class="radio" id="sidebar-number" name="category">
+                                    <label for="sidebar-number">Nummer</label>
+                                </div>
+                                <div class="option Fläche">
+                                    <input type="radio" class="radio" id="sidebar-area" name="category">
+                                    <label for="sidebar-area">Fläche</label>
+                                </div>
+                                {% for param in params %}
+                                <div class="option {{param['name']}}">
+                                    <input type="radio" class="radio" id="sidebar-{{param['name']}}" name="category">
+                                    <label for="sidebar-{{param['name']}}">{{param['name']}}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <input class="selected visible filter-select" name="type" id="type" value="Alle" readonly="readonly">
+
+                            <div class="search-box">
+                                <input type="text" placeholder="Suche..." />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="i arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </div>
+                <div class="filter_div pass">
+                    <div class="i">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="div">
+                        <h5>Suche</h5>
+                        <input class="input" type="text" name="text" id="search">
+                    </div>
+                </div>
+            </div>
+            <div class="filter-delete adding-filter" onclick="add_type_filter()">
+                <i class="fas fa-chevron-right"></i>
+            </div>
         </div>
     </div>
     <table>
@@ -107,12 +87,6 @@
     </table>
 </form>
 <form class="main_page mobile" method="post" autocomplete="off">
-    <div class="confirm-field">
-        <ul class="header-links">
-            <li class="topbar"><a href="{{url_for('naju.add_tree')}}"><i class="fas fa-plus"></i><span>Neuen Baum</span></a></li>
-            <li class="topbar"><a href="{{url_for('naju.add_area')}}"><i class="fas fa-plus"></i><span>Neue Fläche</span></a></li>
-        </ul>
-    </div>
     <div class="filter-line">
         <h2 style="align-self: center; font-size: 2rem;">Bäume</h2>
     </div>
@@ -124,8 +98,58 @@
             <div class="filter-delete" onclick="remove_type_filter('{{filter[0]}}', '{{filter[1]}}')"><i class="fas fa-times"></i></div>
         </div>
         {% endfor %}
-        <div class="filter_entry">
+        <div class="filter_entry gapless">
             <div class="filter-delete" onclick="open_filters()"><i class="fas fa-plus"></i></div>
+            <div class="filter_spacer">
+                <div class="filter_div filter_select_div">
+                    <div class="div">
+                        <div class="select-box area">
+                            <div class="option-container area">
+                                <div class="option Alle">
+                                    <input type="radio" class="radio" id="sidebar-all" name="category">
+                                    <label for="sidebar-all">Alle</label>
+                                </div>
+                                <div class="option Nummer">
+                                    <input type="radio" class="radio" id="sidebar-number" name="category">
+                                    <label for="sidebar-number">Nummer</label>
+                                </div>
+                                <div class="option Fläche">
+                                    <input type="radio" class="radio" id="sidebar-area" name="category">
+                                    <label for="sidebar-area">Fläche</label>
+                                </div>
+                                {% for param in params %}
+                                <div class="option {{param['name']}}">
+                                    <input type="radio" class="radio" id="sidebar-{{param['name']}}" name="category">
+                                    <label for="sidebar-{{param['name']}}">{{param['name']}}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <input class="selected visible filter-select" name="type" id="type" value="Alle" readonly="readonly">
+
+                            <div class="search-box">
+                                <input type="text" placeholder="Suche..." />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="i arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </div>
+                <div class="filter_div pass">
+                    <div class="i">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="div">
+                        <h5>Suche</h5>
+                        <input class="input" type="text" name="text" id="search">
+                    </div>
+                </div>
+            </div>
+            <div class="filter-delete adding-filter" onclick="add_type_filter()">
+                <i class="fas fa-chevron-right"></i>
+            </div>
         </div>
     </div>
     <table>
