@@ -894,6 +894,13 @@ table tbody tr:nth-child(2n) {
     transition: all 0.5s ease;
 }
 
+.marked {
+  border-radius: 5px;
+  background-color: #ffff00;
+  color: red;
+  padding: 0.2rem;
+}
+
 /*  =======================
     PRIVACY IMPRINT LICENCE
     ======================= */

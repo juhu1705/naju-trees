@@ -1,6 +1,7 @@
 import functools
+from sqlite3 import ProgrammingError, DatabaseError
 
-from flask import Blueprint, url_for, redirect, flash, g, render_template, request
+from flask import Blueprint, url_for, redirect, flash, g, render_template, request, current_app
 from werkzeug.security import generate_password_hash
 
 from naju import util
@@ -66,6 +67,37 @@ def register():
         flash(error)
 
     return render_template('naju/register.html')
+
+@bp.route('/sql', methods=('GET', 'POST'))
+@admin_required
+def sql_access():
+    """ SQL-Zugriffsseite """
+    reload_response = redirect(url_for(".sql_access"), code=303)
+
+    if request.method != "POST":
+        return render_template("naju/sql_access.html", query="", result=None)
+
+    # ELSE
+
+    query = request.form["query"]
+
+    if not query:
+        flash("Bitte geben Sie eine SQL-Abfrage ein.", "error")
+        return reload_response
+
+    # Query ausführen
+    db = get_db()
+    try:
+        result = db.execute(query)
+    except DatabaseError as exc:
+        flash(f"Die SQL-Abfrage konnte nicht ausgeführt werden.\n\nFehlerbeschreibung:\n{exc}", "error")
+        return render_template("naju/sql_access.html", query=query, result=None)
+
+    db.commit()
+
+    flash("Die SQL-Abfrage wurde erfolgreich ausgeführt.", "success")
+
+    return render_template("naju/sql_access.html", query=query, result=result)
 
 
 @bp.route('/reset_password/<token>', methods=('GET', 'POST'))

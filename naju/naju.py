@@ -224,11 +224,11 @@ def filtered_home(search=''):
     if search == '':
         return redirect(url_for('naju.home'))
 
-    filters = search.rsplit('|', -1)
+    filters = search.split('|', -1)
     filter_datas = []
 
     for search_filter in filters:
-        expressions = search_filter.rsplit(':')
+        expressions = search_filter.split(':', 1)
         if len(expressions) < 2:
             continue
 

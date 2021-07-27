@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div id="post-section" class="login-content">
+    <form method="post" autocomplete="off">
+        <div class="title">
+            <h2>SQL-Datenbankzugriff</h2>
+        </div>
+
+        <p>
+            Diese Seite erlaubt direkten Zugriff auf die SQL-Datenbank von NaJu-Baumbestand durch die Eingabe von SQL-Abfragen.<br>
+            <b>
+            Bei falscher Anwendung können Daten unwiderruflich verloren gehen.<br>
+            Außerdem kann es bei der Veränderung bestimmter Daten zu unerwarteten Fehlern in der NaJu-Baumbestandsanwendung kommen.<br><br><br>
+            <span class="marked">Benutzen Sie diese Seite nur, wenn Sie wissen, was Sie tun.</span>
+            </b>
+        </p>
+
+
+        <div class="input-div text-area">
+            <div class="i">
+                <i class="far fa-comment-dots"></i>
+            </div>
+
+            <div class="div">
+                <h5>SQL-Befehl</h5>
+                <textarea class="input" name="query" id="area-for-comment" rows="4" style="resize: none;" required autofocus>{{ query }}</textarea>
+            </div>
+
+        </div>
+        <div class="confirm-field">
+            <button id="btnconfirm" type="submit">
+                <div><span>Einloggen</span></div><i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+
+    {% if result is not none %}
+  {% set result_rows = result.fetchall() %}
+
+  <h3>Ergebnis ({{ result_rows|length }} Zeilen):</h3>
+  {% if result_rows is not none and result_rows|length > 0 %}
+  <table class="monospace">
+    <thead>
+      <tr>
+        {% for col_name in result_rows[0].keys() %}
+          <th>{{ col_name }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for row in result_rows %}
+        <tr>
+          {% for value in row %}
+            {% if value is none %}
+              <td class="detail">NULL</td>
+            {% else %}
+              <td>{{ value }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endif %}
+</div>
+{% endblock %}

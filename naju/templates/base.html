@@ -32,6 +32,7 @@
 
             {% if g.user is not none and g.user['level'] > 0 %}
             <a href="{{url_for('admin.accounts')}}"><i class="fas fa-users"></i>Accounts</a>
+            <a href="{{url_for('admin.sql_access')}}"><i class="fas fa-database"></i>SQL</a>
             {% endif %}
             {% if g.user is not none %}
             <p></p>
