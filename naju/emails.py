@@ -49,6 +49,7 @@ def _send_mail(address: str, subject: str, content: str, content_type="html", co
     msg = MIMEText(content, content_type, content_charset)
     msg["From"] = f"NaJu - Baumbestand <{sender_address}>"
     msg["Subject"] = subject
+    msg["To"] = address
 
     smtp_param = smtp is not None
     if not smtp_param:

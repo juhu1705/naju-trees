@@ -68,6 +68,7 @@ def register():
 
     return render_template('naju/register.html')
 
+
 @bp.route('/sql', methods=('GET', 'POST'))
 @admin_required
 def sql_access():
